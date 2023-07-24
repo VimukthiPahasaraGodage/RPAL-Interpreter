@@ -1,0 +1,3 @@
+let Sign N = not (Isinteger N) -> 'Error' | N ls 0 -> 'Negative' | N gr 0 -> 'Positive' |  'Zero' 
+in 
+Print(Sign 10)

@@ -1,0 +1,10 @@
+let Greatest_of_Pair P = (P 1) > (P 2) -> (P 1) | (P 2) 
+in 
+let Greatest L = not (Istuple L) -> 'Error' 
+			| Order L ne 3 -> 'Error' 
+			| not (Isinteger (L 1)) -> 'Error' 
+			| not (Isinteger (L 2)) -> 'Error' 
+			| not (Isinteger (L 3)) -> 'Error' 
+			| Greatest_of_Pair ((nil aug (L 1)) aug Greatest_of_Pair ((nil aug (L 2)) aug (L 3)))
+in 
+Print (Greatest (5,10,3)) // Input your three numbers as a tuple
