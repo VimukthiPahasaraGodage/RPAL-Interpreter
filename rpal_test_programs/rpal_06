@@ -1,0 +1,12 @@
+let rec Fib N = N eq 0 -> 0 
+		| N eq 1 -> 1 
+		| Fib (N - 1) + Fib (N - 2) 
+in 
+let R_lower = 0 and R_upper = 100  
+in 
+let rec Fib_R N i = (Fib N) > R_upper -> ')' 
+			| (Fib N) < R_lower -> Fib_R (N + 1) 0
+			| i > 0 -> Conc (',') (Conc (ItoS(Fib N)) (Fib_R (N + 1) 1))  
+			| Conc ('(') (Conc (ItoS(Fib N)) (Fib_R (N + 1) 1))   
+in 
+Print (Fib_R 0 0) // Define the range which you want to find fibonacci numbers on 'R_lower' and 'R_upper'

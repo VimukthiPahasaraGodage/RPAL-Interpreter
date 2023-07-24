@@ -1,0 +1,14 @@
+let rec Reverse S = S eq '' -> '' 
+			| Conc (Reverse (Stern S)) (Stem S) 
+within Palindrome Num = (ItoS Num) eq (Reverse (ItoS Num))  
+in 
+let R_lower = 1 and R_upper = 10 
+in 
+let rec Palindrome_R N i = N > R_upper -> ')' 
+				| N < R_lower -> Palindrome_R (N + 1) 0 
+				| Palindrome N -> (i > 0 -> Conc (',') (Conc (ItoS N) (Palindrome_R (N + 1) 1)) 
+				| Conc ('(') (Conc (ItoS N) (Palindrome_R (N + 1) 1)))  
+				| Conc ('') (Palindrome_R (N + 1) i) 
+in 
+Print (Palindrome_R 0 0) // Define the range which you want to find palindrome numbers on 'R_lower' and 'R_upper'
+

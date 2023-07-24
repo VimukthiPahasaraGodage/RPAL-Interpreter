@@ -1,0 +1,3 @@
+let Odd_Even N = not (Isinteger N) -> 'Error' | (N - (2 * (N / 2))) eq 0 -> 'Even' | 'Odd' 
+in 
+Print (Odd_Even (-8)) 

@@ -1,0 +1,10 @@
+let Sum_list L = not (Istuple L) -> 'Error' 
+                  | not (Isinteger (L 1)) -> 'Error' 
+			| not (Istuple (L 2)) -> 'Error' 
+			| (L 1) > (Order (L 2)) -> 'Error' 
+			| Partial_sum ((L 2), (L 1)) 
+where rec Partial_sum (L,N) = N eq 0 -> 0 
+					| L N + Partial_sum(L,N-1) 
+in 
+Print (Sum_list (10, (1,2,3,4,5,6,7,8,9,10))) // The input to the Sum_list must be a tuple in the form (Number of elements to add, Sequence of the numbers as a tuple) 
+

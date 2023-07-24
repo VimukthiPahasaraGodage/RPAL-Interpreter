@@ -1,0 +1,3 @@
+let rec Factorial N = N < 0 -> 'Error' | ((N eq 1) or (N eq 0)) -> 1 | N * Factorial (N - 1) 
+in 
+Print (Factorial 5) 

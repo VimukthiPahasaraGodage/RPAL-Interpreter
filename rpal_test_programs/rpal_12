@@ -1,0 +1,9 @@
+let rec Reverse S = S eq '' -> '' 
+			| Conc (Reverse (Stern S)) (Stem S) 
+within Palindrome_ N = not (Isinteger N) -> 'Error' 
+				| N < 0 -> 'Error' 
+				| (ItoS N) eq (Reverse (ItoS N)) 
+in 
+let Palindrome N = Palindrome_ N -> 'Palindrome' | 'Not a palindrome' 
+in 
+Print (Palindrome 121) 

@@ -7,4 +7,4 @@ let Greatest L = not (Istuple L) -> 'Error'
 			| not (Isinteger (L 3)) -> 'Error' 
 			| Greatest_of_Pair ((nil aug (L 1)) aug Greatest_of_Pair ((nil aug (L 2)) aug (L 3)))
 in 
-Print (Greatest (5,10,3)) // Input your three numbers as a tuple
+Print (Greatest (100,100,100)) // Input your three numbers as a tuple
