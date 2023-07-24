@@ -11,3 +11,9 @@ which then will be evaluated by a CSE(Control Stack Environment) Machine.
 - RANGA J.A.L.K. 200523J
 - THARINDA N.H.D. 200638P
 
+## Check the correctness
+Run **finalize.bat** file to build the project and to test whether the test programs in the rpal_test_programs produce a result identical to the RPAL interpreter by Steven V. Walstra
+```bash
+./finalize.bat
+```
+
