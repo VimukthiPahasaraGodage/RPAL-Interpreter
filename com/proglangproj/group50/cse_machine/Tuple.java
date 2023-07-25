@@ -6,25 +6,25 @@ import com.proglangproj.group50.abstractsyntaxtree.ASTNodeType;
 public class Tuple extends ASTNode{
   
   public Tuple(){
-    setType(ASTNodeType.TUPLE);
+    setTypeOfASTNode(ASTNodeType.TUPLE);
   }
   
   @Override
-  public String getValue(){
-    ASTNode childNode = getChild();
+  public String getValueOfASTNode(){
+    ASTNode childNode = getChildOfASTNode();
     if(childNode==null)
       return "nil";
     
     String printValue = "(";
-    while(childNode.getSibling()!=null){
-      printValue += childNode.getValue() + ", ";
-      childNode = childNode.getSibling();
+    while(childNode.getSiblingOfASTNode()!=null){
+      printValue += childNode.getValueOfASTNode() + ", ";
+      childNode = childNode.getSiblingOfASTNode();
     }
-    printValue += childNode.getValue() + ")";
+    printValue += childNode.getValueOfASTNode() + ")";
     return printValue;
   }
   
-  public Tuple accept(NodeCopier nodeCopier){
+  public Tuple acceptASTNode(NodeCopier nodeCopier){
     return nodeCopier.copy(this);
   }
   

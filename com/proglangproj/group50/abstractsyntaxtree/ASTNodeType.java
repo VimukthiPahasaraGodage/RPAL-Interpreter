@@ -1,79 +1,95 @@
 package com.proglangproj.group50.abstractsyntaxtree;
 
-/**
- * Type of abstract syntax tree node. As specified in the RPAL phrase structure grammar.
- * @author Raj
- */
-public enum ASTNodeType{
-  //General
-  IDENTIFIER("<ID:%s>"),
-  STRING("<STR:'%s'>"),
-  INTEGER("<INT:%s>"),
-  
-  //Expressions
-  LET("let"),
-  LAMBDA("lambda"),
-  WHERE("where"),
-  
-  //Tuple expressions
-  TAU("tau"),
-  AUG("aug"),
-  CONDITIONAL("->"),
-  
-  //Boolean Expressions
-  OR("or"),
-  AND("&"),
-  NOT("not"),
-  GR("gr"),
-  GE("ge"),
-  LS("ls"),
-  LE("le"),
-  EQ("eq"),
-  NE("ne"),
-  
-  //Arithmetic Expressions
-  PLUS("+"),
-  MINUS("-"),
-  NEG("neg"),
-  MULT("*"),
-  DIV("/"),
-  EXP("**"),
-  AT("@"),
-  
-  //Rators and Rands
-  GAMMA("gamma"),
-  TRUE("<true>"),
-  FALSE("<false>"),
-  NIL("<nil>"),
-  DUMMY("<dummy>"),
-  
-  //Definitions
-  WITHIN("within"),
-  SIMULTDEF("and"),
-  REC("rec"),
-  EQUAL("="),
-  FCNFORM("function_form"),
-  
-  //Variables
-  PAREN("<()>"),
-  COMMA(","),
-  
-  //Post-standardize
-  YSTAR("<Y*>"),
-  
-  //For program evaluation only. Will never appear in a standardized or non-standardized AST. 
-  BETA(""),
-  DELTA(""),
-  ETA(""),
-  TUPLE("");
-  
-  private String printName; //used for printing AST representation
-  
-  private ASTNodeType(String name){
-    printName = name;
-  }
+public enum ASTNodeType {
+    /**
+     * Expressions
+     */
+    LET("let"),
+    LAMBDA("lambda"),
+    WHERE("where"),
 
-  public String getPrintName(){
-    return printName;
-  }
+    /**
+     * Tuple expressions
+     */
+    TAU("tau"),
+    AUG("aug"),
+    CONDITIONAL("->"),
+
+    /**
+     * General
+     */
+    IDENTIFIER("<ID:%s>"),
+    STRING("<STR:'%s'>"),
+    INTEGER("<INT:%s>"),
+
+    /**
+     * Arithmetic Expressions
+     */
+    PLUS("+"),
+    MINUS("-"),
+    NEG("neg"),
+    MULT("*"),
+    DIV("/"),
+    EXP("**"),
+    AT("@"),
+
+    /**
+     * Rators and Rands
+     */
+    GAMMA("gamma"),
+    TRUE("<true>"),
+    FALSE("<false>"),
+    NIL("<nil>"),
+    DUMMY("<dummy>"),
+
+    /**
+     * Definitions
+     */
+    WITHIN("within"),
+    SIMULTDEF("and"),
+    REC("rec"),
+    EQUAL("="),
+    FCNFORM("function_form"),
+
+    /**
+     * Variables
+     */
+    PAREN("<()>"),
+    COMMA(","),
+
+    /**
+     * Boolean Expressions
+     */
+    OR("or"),
+    AND("&"),
+    NOT("not"),
+    GR("gr"),
+    GE("ge"),
+    LS("ls"),
+    LE("le"),
+    EQ("eq"),
+    NE("ne"),
+
+    /**
+     * YSTAR - rec
+     */
+    YSTAR("<Y*>"),
+
+    /**
+     * For program evaluation
+     */
+    BETA(""),
+    DELTA(""),
+    ETA(""),
+    TUPLE("");
+
+    private final String printNameOfASTNode; //used for printing AST representation
+
+    ASTNodeType(String name) {
+        printNameOfASTNode = name;
+    }
+
+    public String getPrintNameOfASTNode() {
+        return printNameOfASTNode;
+    }
 }

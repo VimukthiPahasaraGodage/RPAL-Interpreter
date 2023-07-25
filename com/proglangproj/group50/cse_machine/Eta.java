@@ -16,16 +16,16 @@ public class Eta extends ASTNode{
   private Delta delta;
   
   public Eta(){
-    setType(ASTNodeType.ETA);
+    setTypeOfASTNode(ASTNodeType.ETA);
   }
   
   //used if the program evaluation results in a partial application
   @Override
-  public String getValue(){
+  public String getValueOfASTNode(){
     return "[eta closure: "+delta.getBoundVars().get(0)+": "+delta.getIndex()+"]";
   }
   
-  public Eta accept(NodeCopier nodeCopier){
+  public Eta acceptASTNode(NodeCopier nodeCopier){
     return nodeCopier.copy(this);
   }
 

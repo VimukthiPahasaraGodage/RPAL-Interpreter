@@ -108,14 +108,14 @@ public class Parser{
    */
   private void Build_NAry_ASTNode(ASTNodeType type, int aryness){
     ASTNode node = new ASTNode();
-    node.setType(type);
+    node.setTypeOfASTNode(type);
     while(aryness > 0){
       ASTNode child = Stack.pop();// getting the first element of stack
-      if(node.getChild() != null) {
-        child.setSibling(node.getChild());
+      if(node.getChildOfASTNode() != null) {
+        child.setSiblingOfASTNode(node.getChildOfASTNode());
       }
-      node.setChild(child); // setting up the child
-      node.setSourceLineNumber(child.getSourceLineNumber());
+      node.setChildOfASTNode(child); // setting up the child
+      node.setLineNumberOfSourceFile(child.getLineNumberOfSourceFile());
       aryness = aryness -1;
     }
     Stack.push(node);
@@ -123,9 +123,9 @@ public class Parser{
 
   private void Create_Terminal_ASTNode(ASTNodeType type, String val){
     ASTNode node = new ASTNode();
-    node.setValue(val);
-    node.setType(type);
-    node.setSourceLineNumber(Cur_Token.getLineNumberOfSourceWhereTokenIs());
+    node.setValueOfASTNode(val);
+    node.setTypeOfASTNode(type);
+    node.setLineNumberOfSourceFile(Cur_Token.getLineNumberOfSourceWhereTokenIs());
     Stack.push(node);
   }
   

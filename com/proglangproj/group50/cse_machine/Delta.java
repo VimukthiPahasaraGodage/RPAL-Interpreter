@@ -18,17 +18,17 @@ public class Delta extends ASTNode{
   private int index;
   
   public Delta(){
-    setType(ASTNodeType.DELTA);
+    setTypeOfASTNode(ASTNodeType.DELTA);
     boundVars = new ArrayList<String>();
   }
   
-  public Delta accept(NodeCopier nodeCopier){
+  public Delta acceptASTNode(NodeCopier nodeCopier){
     return nodeCopier.copy(this);
   }
   
   //used if the program evaluation results in a partial application
   @Override
-  public String getValue(){
+  public String getValueOfASTNode(){
     return "[lambda closure: "+boundVars.get(0)+": "+index+"]";
   }
 

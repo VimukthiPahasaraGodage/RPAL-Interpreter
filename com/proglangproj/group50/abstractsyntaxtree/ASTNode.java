@@ -2,62 +2,54 @@ package com.proglangproj.group50.abstractsyntaxtree;
 
 import com.proglangproj.group50.cse_machine.NodeCopier;
 
-/**
- * Abstract Syntax Tree node. Uses a first-child, next-sibling representation.
- * @author Raj
- */
-public class ASTNode{
-  private ASTNodeType type;
-  private String value;
-  private ASTNode child;
-  private ASTNode sibling;
-  private int sourceLineNumber;
-  
-  public String getName(){
-    return type.name();
-  }
+public class ASTNode {
+    private ASTNodeType typeOfASTNode;
+    private String valueOfASTNode;
+    private ASTNode childOfASTNode;
+    private ASTNode siblingOfASTNode;
+    private int lineNumberOfSourceFile;
 
-  public ASTNodeType getType(){
-    return type;
-  }
+    public ASTNodeType getTypeOfASTNode() {
+        return typeOfASTNode;
+    }
 
-  public void setType(ASTNodeType type){
-    this.type = type;
-  }
+    public void setTypeOfASTNode(ASTNodeType typeOfASTNode) {
+        this.typeOfASTNode = typeOfASTNode;
+    }
 
-  public ASTNode getChild(){
-    return child;
-  }
+    public ASTNode getChildOfASTNode() {
+        return childOfASTNode;
+    }
 
-  public void setChild(ASTNode child){
-    this.child = child;
-  }
+    public void setChildOfASTNode(ASTNode childOfASTNode) {
+        this.childOfASTNode = childOfASTNode;
+    }
 
-  public ASTNode getSibling(){
-    return sibling;
-  }
+    public ASTNode getSiblingOfASTNode() {
+        return siblingOfASTNode;
+    }
 
-  public void setSibling(ASTNode sibling){
-    this.sibling = sibling;
-  }
+    public void setSiblingOfASTNode(ASTNode siblingOfASTNode) {
+        this.siblingOfASTNode = siblingOfASTNode;
+    }
 
-  public String getValue(){
-    return value;
-  }
+    public String getValueOfASTNode() {
+        return valueOfASTNode;
+    }
 
-  public void setValue(String value){
-    this.value = value;
-  }
+    public void setValueOfASTNode(String valueOfASTNode) {
+        this.valueOfASTNode = valueOfASTNode;
+    }
 
-  public ASTNode accept(NodeCopier nodeCopier){
-    return nodeCopier.copy(this);
-  }
+    public ASTNode acceptASTNode(NodeCopier nodeCopier) {
+        return nodeCopier.copy(this);
+    }
 
-  public int getSourceLineNumber(){
-    return sourceLineNumber;
-  }
+    public int getLineNumberOfSourceFile() {
+        return lineNumberOfSourceFile;
+    }
 
-  public void setSourceLineNumber(int sourceLineNumber){
-    this.sourceLineNumber = sourceLineNumber;
-  }
+    public void setLineNumberOfSourceFile(int lineNumberOfSourceFile) {
+        this.lineNumberOfSourceFile = lineNumberOfSourceFile;
+    }
 }

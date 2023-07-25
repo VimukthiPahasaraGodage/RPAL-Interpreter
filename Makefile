@@ -13,7 +13,6 @@ CLASSES = \
         com/proglangproj/group50/abstractsyntaxtree/AST.java \
         com/proglangproj/group50/abstractsyntaxtree/ASTNode.java \
         com/proglangproj/group50/abstractsyntaxtree/ASTNodeType.java \
-        com/proglangproj/group50/abstractsyntaxtree/StandardizeException.java \
         com/proglangproj/group50/cse_machine/Beta.java \
         com/proglangproj/group50/cse_machine/CSEMachine.java \
         com/proglangproj/group50/cse_machine/Delta.java \

@@ -25,12 +25,12 @@ public class Beta extends ASTNode{
   private Stack<ASTNode> elseBody;
   
   public Beta(){
-    setType(ASTNodeType.BETA);
+    setTypeOfASTNode(ASTNodeType.BETA);
     thenBody = new Stack<ASTNode>();
     elseBody = new Stack<ASTNode>();
   }
   
-  public Beta accept(NodeCopier nodeCopier){
+  public Beta acceptASTNode(NodeCopier nodeCopier){
     return nodeCopier.copy(this);
   }
 
