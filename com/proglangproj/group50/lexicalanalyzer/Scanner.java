@@ -1,307 +1,317 @@
 package com.proglangproj.group50.lexicalanalyzer;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 
-public class Scanner{
+public class Scanner {
+    /**
+     * Declaration of constant integer values for each possible token type
+     */
+    public static final int TOKEN_TYPE_IDENTIFIER = 0;
+    public static final int TOKEN_TYPE_INTEGER = 1;
+    public static final int TOKEN_TYPE_STRING = 2;
+    public static final int TOKEN_TYPE_OPERATOR = 3;
+    public static final int TOKEN_TYPE_DELETE = 4;
+    public static final int TOKEN_TYPE_L_PAREN = 5;
+    public static final int TOKEN_TYPE_R_PAREN = 6;
+    public static final int TOKEN_TYPE_SEMICOLON = 7;
+    public static final int TOKEN_TYPE_COMMA = 8;
+    // Reserved Tokens are keywords such as 'let, 'aug', 'within', 'and', ...
+    public static final int TOKEN_TYPE_RESERVED = 9;
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  /*
-   * Declaration of constant integer values for each possible token type
-   */
-  public static final int TOKEN_TYPE_IDENTIFIER = 0;
-  public static final int TOKEN_TYPE_INTEGER = 1;
-  public static final int TOKEN_TYPE_STRING = 2;
-  public static final int TOKEN_TYPE_OPERATOR = 3;
-  public static final int TOKEN_TYPE_DELETE = 4;
-  public static final int TOKEN_TYPE_L_PAREN = 5;
-  public static final int TOKEN_TYPE_R_PAREN = 6;
-  public static final int TOKEN_TYPE_SEMICOLON = 7;
-  public static final int TOKEN_TYPE_COMMA = 8;
-  public static final int TOKEN_TYPE_RESERVED = 9;
-  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    /**
+     * Declaration of regular expressions for token matching
+     */
+    ////////////////////////// Java Match Strings for Regular Expressions ////////////////////////////////////////////////
+    private static final String letterRegularExpressionMatchString = "a-zA-Z";
+    public static final Pattern LetterRegularExpression = Pattern.compile("[" + letterRegularExpressionMatchString + "]");
+    private static final String digitRegularExpressionMatchString = "\\d";
+    public static final Pattern IdentifierRegularExpression = Pattern.compile("[" + letterRegularExpressionMatchString + digitRegularExpressionMatchString + "_]");
+    public static final Pattern DigitRegularExpression = Pattern.compile(digitRegularExpressionMatchString);
+    private static final String spaceRegularExpressionMatchString = "[\\s\\t\\n]";
 
-  /*
-   * Declaration of
-   */
-  private static final String letterRegexString = "a-zA-Z";
-  private static final String digitRegexString = "\\d";
-  private static final String spaceRegexString = "[\\s\\t\\n]";
-  private static final String punctuationRegexString = "();,";
-  private static final String opSymbolRegexString = "+-/~:=|!#%_{}\"*<>.&$^\\[\\]?@";
-  private static final String opSymbolToEscapeString = "([*<>.&$^?])";
-
-  public static final Pattern LetterPattern = Pattern.compile("["+letterRegexString+"]");
-
-  public static final Pattern IdentifierPattern = Pattern.compile("["+letterRegexString+digitRegexString+"_]");
-
-  public static final Pattern DigitPattern = Pattern.compile(digitRegexString);
-
-  public static final Pattern PunctuationPattern = Pattern.compile("["+punctuationRegexString+"]");
-
-  public static final String opSymbolRegex = "[" + escapeMetaChars(opSymbolRegexString, opSymbolToEscapeString) + "]";
-  public static final Pattern OpSymbolPattern = Pattern.compile(opSymbolRegex);
-
-  public static final Pattern StringPattern = Pattern.compile("[ \\t\\n\\\\"+punctuationRegexString+letterRegexString+digitRegexString+escapeMetaChars(opSymbolRegexString, opSymbolToEscapeString) +"]");
-
-  public static final Pattern SpacePattern = Pattern.compile(spaceRegexString);
-
-  public static final Pattern CommentPattern = Pattern.compile("[ \\t\\'\\\\ \\r"+punctuationRegexString+letterRegexString+digitRegexString+escapeMetaChars(opSymbolRegexString, opSymbolToEscapeString)+"]"); //the \\r is for Windows LF; not really required since we're targeting *nix systems
-
-  private static String escapeMetaChars(String inputString, String charsToEscape){
-    return inputString.replaceAll(charsToEscape,"\\\\\\\\$1");
-  }
-
-  private BufferedReader buffer;
-  private String extraCharRead;
-  private final List<String> reservedIdentifiers = Arrays.asList(new String[]{"let","in","within","fn","where","aug","or",
-                                                                              "not","gr","ge","ls","le","eq","ne","true",
-                                                                              "false","nil","dummy","rec","and"});
-  private int sourceLineNumber;
-  
-  public Scanner(String inputFile) throws IOException{
-    sourceLineNumber = 1;
-    buffer = new BufferedReader(new InputStreamReader(new FileInputStream(new File(inputFile))));
-  }
-  
-  /**
-   * Returns next token from input file
-   * @return null if the file has ended
-   */
-  public Token readNextToken(){
-    Token nextToken = null;
-    String nextChar;
-    if(extraCharRead!=null){
-      nextChar = extraCharRead;
-      extraCharRead = null;
-    } else
-      nextChar = getNextCharacterFromSource();
-    if(nextChar!=null)
-      nextToken = buildToken(nextChar);
-    return nextToken;
-  }
-
-  private String getNextCharacterFromSource(){
-    String nextChar = null;
-    try{
-      int c = buffer.read();
-      if(c!=-1){
-        nextChar = Character.toString((char)c);
-        if(nextChar.equals("\n")) sourceLineNumber++;
-      } else
-          buffer.close();
-    }catch(IOException e){
+    ////////////////////////// Regular Expressions ///////////////////////////////////////////////////////////////////////
+    public static final Pattern SpaceRegularExpression = Pattern.compile(spaceRegularExpressionMatchString);
+    private static final String punctuationRegularExpressionMatchString = "();,";
+    public static final Pattern PunctuationRegularExpression = Pattern.compile("[" + punctuationRegularExpressionMatchString + "]");
+    private static final String operatorSymbolRegularExpressionMatchString = "+-/~:=|!#%_{}\"*<>.&$^\\[\\]?@";
+    private static final String operatorSymbolToEscapeRegularExpressionMatchString = "([*<>.&$^?])";
+    public static final Pattern OperatorSymbolRegularExpression = Pattern.compile("[" + escapeMetaChars() + "]");
+    public static final Pattern StringRegularExpression = Pattern.compile("[ \\t\\n\\\\" + punctuationRegularExpressionMatchString + letterRegularExpressionMatchString + digitRegularExpressionMatchString + escapeMetaChars() + "]");
+    public static final Pattern CommentRegularExpression = Pattern.compile("[ \\t\\'\\\\ \\r" + punctuationRegularExpressionMatchString + letterRegularExpressionMatchString + digitRegularExpressionMatchString + escapeMetaChars() + "]"); //the \\r is for Windows LF; not really required since we're targeting *nix systems
+    private final List<String> reservedIdentifiers = Arrays.asList("let", "in", "within", "fn", "where", "aug", "or",
+            "not", "gr", "ge", "ls", "le", "eq", "ne", "true",
+            "false", "nil", "dummy", "rec", "and");
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    private final BufferedReader buffer;
+    private String extraCharRead;
+    private int currentLineNumberInRPALSource;
+    public Scanner(String inputFile) throws IOException {
+        currentLineNumberInRPALSource = 1;
+        buffer = new BufferedReader(new InputStreamReader(new FileInputStream(new File(inputFile))));
     }
-    return nextChar;
-  }
 
-  /**
-   * Builds next token from input
-   * @param currentChar character currently being processed 
-   * @return token that was built
-   */
-  private Token buildToken(String currentChar){
-    Token nextToken = null;
-    if(LetterPattern.matcher(currentChar).matches()){
-      nextToken = buildIdentifierToken(currentChar);
+    private static String escapeMetaChars() {
+        return Scanner.operatorSymbolRegularExpressionMatchString.replaceAll(Scanner.operatorSymbolToEscapeRegularExpressionMatchString, "\\\\\\\\$1");
     }
-    else if(DigitPattern.matcher(currentChar).matches()){
-      nextToken = buildIntegerToken(currentChar);
-    }
-    else if(OpSymbolPattern.matcher(currentChar).matches()){ //comment tokens are also entered from here
-      nextToken = buildOperatorToken(currentChar);
-    }
-    else if(currentChar.equals("\'")){
-      nextToken = buildStringToken(currentChar);
-    }
-    else if(SpacePattern.matcher(currentChar).matches()){
-      nextToken = buildSpaceToken(currentChar);
-    }
-    else if(PunctuationPattern.matcher(currentChar).matches()){
-      nextToken = buildPunctuationPattern(currentChar);
-    }
-    return nextToken;
-  }
 
-  /**
-   * Builds Identifier token.
-   * Identifier -> Letter (Letter | Digit | '_')*
-   * @param currentChar character currently being processed 
-   * @return token that was built
-   */
-  private Token buildIdentifierToken(String currentChar){
-    Token identifierToken = new Token();
-    identifierToken.setType(TOKEN_TYPE_IDENTIFIER);
-    identifierToken.setSourceLineNumber(sourceLineNumber);
-    StringBuilder sBuilder = new StringBuilder(currentChar);
-    
-    String nextChar = getNextCharacterFromSource();
-    while(nextChar!=null){ //null indicates the file ended
-      if(IdentifierPattern.matcher(nextChar).matches()){
-        sBuilder.append(nextChar);
-        nextChar = getNextCharacterFromSource();
-      }
-      else{
-        extraCharRead = nextChar;
-        break;
-      }
+    /**
+     * Returns next token from the RPAL source file
+     *
+     * @return null if the file has ended
+     */
+    public Token readNextToken() {
+        Token nextToken = null;
+        String nextChar;
+        if (extraCharRead != null) {
+            nextChar = extraCharRead;
+            extraCharRead = null;
+        } else
+            nextChar = getNextCharacterFromSource();
+        if (nextChar != null)
+            nextToken = matchAndGetNextToken(nextChar);
+        return nextToken;
     }
-    
-    String value = sBuilder.toString();
-    if(reservedIdentifiers.contains(value))
-      identifierToken.setType(TOKEN_TYPE_RESERVED);
-    
-    identifierToken.setValue(value);
-    return identifierToken;
-  }
 
-  /**
-   * Builds integer token.
-   * Integer -> Digit+
-   * @param currentChar character currently being processed 
-   * @return token that was built
-   */
-  private Token buildIntegerToken(String currentChar){
-    Token integerToken = new Token();
-    integerToken.setType(TOKEN_TYPE_INTEGER);
-    integerToken.setSourceLineNumber(sourceLineNumber);
-    StringBuilder sBuilder = new StringBuilder(currentChar);
-    
-    String nextChar = getNextCharacterFromSource();
-    while(nextChar!=null){ //null indicates the file ended
-      if(DigitPattern.matcher(nextChar).matches()){
-        sBuilder.append(nextChar);
-        nextChar = getNextCharacterFromSource();
-      }
-      else{
-        extraCharRead = nextChar;
-        break;
-      }
+    /**
+     * Returns next character from the RPAL source file
+     * if the next character is '\n', increment the currentLineNumberInRPALSource by 1
+     *
+     * @return null if the file has ended
+     */
+    private String getNextCharacterFromSource() {
+        String nextChar = null;
+        try {
+            int c = buffer.read();
+            if (c != -1) {
+                nextChar = Character.toString((char) c);
+                if (nextChar.equals("\n")) currentLineNumberInRPALSource++;
+            } else
+                buffer.close();
+        } catch (IOException e) {
+          System.out.println("Unexpected error occurred while reading the RPAL source file");
+        }
+        return nextChar;
     }
-    
-    integerToken.setValue(sBuilder.toString());
-    return integerToken;
-  }
 
-  /**
-   * Builds operator token.
-   * Operator -> Operator_symbol+
-   * @param currentChar character currently being processed 
-   * @return token that was built
-   */
-  private Token buildOperatorToken(String currentChar){
-    Token opSymbolToken = new Token();
-    opSymbolToken.setType(TOKEN_TYPE_OPERATOR);
-    opSymbolToken.setSourceLineNumber(sourceLineNumber);
-    StringBuilder sBuilder = new StringBuilder(currentChar);
-    
-    String nextChar = getNextCharacterFromSource();
-    
-    if(currentChar.equals("/") && nextChar.equals("/"))
-      return buildCommentToken(currentChar+nextChar);
-    
-    while(nextChar!=null){ //null indicates the file ended
-      if(OpSymbolPattern.matcher(nextChar).matches()){
-        sBuilder.append(nextChar);
-        nextChar = getNextCharacterFromSource();
-      }
-      else{
-        extraCharRead = nextChar;
-        break;
-      }
+    /**
+     * gets next token from the RPAL source file
+     *
+     * @param currentCharacter character currently being processed
+     * @return token that was built
+     */
+    private Token matchAndGetNextToken(String currentCharacter) {
+        Token nextToken = null;
+        if (LetterRegularExpression.matcher(currentCharacter).matches()) {
+            nextToken = getIdentifierToken(currentCharacter);
+        } else if (DigitRegularExpression.matcher(currentCharacter).matches()) {
+            nextToken = getIntegerToken(currentCharacter);
+        } else if (OperatorSymbolRegularExpression.matcher(currentCharacter).matches()) {
+            nextToken = getOperatorToken(currentCharacter);
+        } else if (currentCharacter.equals("'")) {
+            nextToken = getStringToken();
+        } else if (SpaceRegularExpression.matcher(currentCharacter).matches()) {
+            nextToken = getSpaceToken(currentCharacter);
+        } else if (PunctuationRegularExpression.matcher(currentCharacter).matches()) {
+            nextToken = getPunctuationToken(currentCharacter);
+        }
+        return nextToken;
     }
-    
-    opSymbolToken.setValue(sBuilder.toString());
-    return opSymbolToken;
-  }
 
-  /**
-   * Builds string token.
-   * String -> '''' ('\' 't' | '\' 'n' | '\' '\' | '\' '''' |'(' | ')' | ';' | ',' |'' |Letter | Digit | Operator_symbol )* ''''
-   * @param currentChar character currently being processed 
-   * @return token that was built
-   */
-  private Token buildStringToken(String currentChar){
-    Token stringToken = new Token();
-    stringToken.setType(TOKEN_TYPE_STRING);
-    stringToken.setSourceLineNumber(sourceLineNumber);
-    StringBuilder sBuilder = new StringBuilder("");
-    
-    String nextChar = getNextCharacterFromSource();
-    while(nextChar!=null){ //null indicates the file ended
-      if(nextChar.equals("\'")){ //we just used up the last char we read, hence no need to set extraCharRead
-        //sBuilder.append(nextChar);
-        stringToken.setValue(sBuilder.toString());
-        return stringToken;
-      }
-      else if(StringPattern.matcher(nextChar).matches()){ //match Letter | Digit | Operator_symbol
-        sBuilder.append(nextChar);
-        nextChar = getNextCharacterFromSource();
-      }
-    }
-    
-    return null;
-  }
-  
-  private Token buildSpaceToken(String currentChar){
-    Token deleteToken = new Token();
-    deleteToken.setType(TOKEN_TYPE_DELETE);
-    deleteToken.setSourceLineNumber(sourceLineNumber);
-    StringBuilder sBuilder = new StringBuilder(currentChar);
-    
-    String nextChar = getNextCharacterFromSource();
-    while(nextChar!=null){ //null indicates the file ended
-      if(SpacePattern.matcher(nextChar).matches()){
-        sBuilder.append(nextChar);
-        nextChar = getNextCharacterFromSource();
-      }
-      else{
-        extraCharRead = nextChar;
-        break;
-      }
-    }
-    
-    deleteToken.setValue(sBuilder.toString());
-    return deleteToken;
-  }
-  
-  private Token buildCommentToken(String currentChar){
-    Token commentToken = new Token();
-    commentToken.setType(TOKEN_TYPE_DELETE);
-    commentToken.setSourceLineNumber(sourceLineNumber);
-    StringBuilder sBuilder = new StringBuilder(currentChar);
-    
-    String nextChar = getNextCharacterFromSource();
-    while(nextChar!=null){ //null indicates the file ended
-      if(CommentPattern.matcher(nextChar).matches()){
-        sBuilder.append(nextChar);
-        nextChar = getNextCharacterFromSource();
-      }
-      else if(nextChar.equals("\n"))
-        break;
-    }
-    
-    commentToken.setValue(sBuilder.toString());
-    return commentToken;
-  }
+    /**
+     * Get a Identifier token.
+     * Identifier -> Letter (Letter | Digit | '_')*
+     *
+     * @param currentCharacter character currently being processed
+     * @return token that was built
+     */
+    private Token getIdentifierToken(String currentCharacter) {
+        Token identifierToken = new Token();
+        identifierToken.setTokenType(TOKEN_TYPE_IDENTIFIER);
+        identifierToken.setLineNumberOfSourceWhereTokenIs(currentLineNumberInRPALSource);
+        StringBuilder sBuilder = new StringBuilder(currentCharacter);
 
-  private Token buildPunctuationPattern(String currentChar){
-    Token punctuationToken = new Token();
-    punctuationToken.setSourceLineNumber(sourceLineNumber);
-    punctuationToken.setValue(currentChar);
-    switch (currentChar) {
-      case "(" -> punctuationToken.setType(TOKEN_TYPE_L_PAREN);
-      case ")" -> punctuationToken.setType(TOKEN_TYPE_R_PAREN);
-      case ";" -> punctuationToken.setType(TOKEN_TYPE_SEMICOLON);
-      case "," -> punctuationToken.setType(TOKEN_TYPE_COMMA);
+        String nextChar = getNextCharacterFromSource();
+        while (nextChar != null) { //null indicates the file ended
+            if (IdentifierRegularExpression.matcher(nextChar).matches()) {
+                sBuilder.append(nextChar);
+                nextChar = getNextCharacterFromSource();
+            } else {
+                extraCharRead = nextChar;
+                break;
+            }
+        }
+
+        String value = sBuilder.toString();
+        if (reservedIdentifiers.contains(value))
+            identifierToken.setTokenType(TOKEN_TYPE_RESERVED);
+
+        identifierToken.setTokenValue(value);
+        return identifierToken;
     }
-    return punctuationToken;
-  }
+
+    /**
+     * Get an integer token.
+     * Integer -> Digit+
+     *
+     * @param currentCharacter character currently being processed
+     * @return token that was built
+     */
+    private Token getIntegerToken(String currentCharacter) {
+        Token integerToken = new Token();
+        integerToken.setTokenType(TOKEN_TYPE_INTEGER);
+        integerToken.setLineNumberOfSourceWhereTokenIs(currentLineNumberInRPALSource);
+        StringBuilder sBuilder = new StringBuilder(currentCharacter);
+
+        String nextChar = getNextCharacterFromSource();
+        while (nextChar != null) { //null indicates the file ended
+            if (DigitRegularExpression.matcher(nextChar).matches()) {
+                sBuilder.append(nextChar);
+                nextChar = getNextCharacterFromSource();
+            } else {
+                extraCharRead = nextChar;
+                break;
+            }
+        }
+
+        integerToken.setTokenValue(sBuilder.toString());
+        return integerToken;
+    }
+
+    /**
+     * Get an operator token.
+     * Operator -> Operator_symbol+
+     *
+     * @param currentCharacter character currently being processed
+     * @return token that was built
+     */
+    private Token getOperatorToken(String currentCharacter) {
+        Token opSymbolToken = new Token();
+        opSymbolToken.setTokenType(TOKEN_TYPE_OPERATOR);
+        opSymbolToken.setLineNumberOfSourceWhereTokenIs(currentLineNumberInRPALSource);
+        StringBuilder sBuilder = new StringBuilder(currentCharacter);
+
+        String nextChar = getNextCharacterFromSource();
+
+        if (currentCharacter.equals("/") && nextChar.equals("/"))
+            return getCommentToken(currentCharacter + nextChar);
+
+        while (nextChar != null) { //null indicates the file ended
+            if (OperatorSymbolRegularExpression.matcher(nextChar).matches()) {
+                sBuilder.append(nextChar);
+                nextChar = getNextCharacterFromSource();
+            } else {
+                extraCharRead = nextChar;
+                break;
+            }
+        }
+
+        opSymbolToken.setTokenValue(sBuilder.toString());
+        return opSymbolToken;
+    }
+
+    /**
+     * Get a string token.
+     * String -> '''' ('\' 't' | '\' 'n' | '\' '\' | '\' '''' |'(' | ')' | ';' | ',' |'' |Letter | Digit | Operator_symbol )* ''''
+     *
+     * @return token that was built
+     */
+    private Token getStringToken() {
+        Token stringToken = new Token();
+        stringToken.setTokenType(TOKEN_TYPE_STRING);
+        stringToken.setLineNumberOfSourceWhereTokenIs(currentLineNumberInRPALSource);
+        StringBuilder sBuilder = new StringBuilder();
+
+        String nextChar = getNextCharacterFromSource();
+        while (nextChar != null) { //null indicates the file ended
+            if (nextChar.equals("'")) { //we just used up the last char we read, hence no need to set extraCharRead
+                //sBuilder.append(nextChar);
+                stringToken.setTokenValue(sBuilder.toString());
+                return stringToken;
+            } else if (StringRegularExpression.matcher(nextChar).matches()) { //match Letter | Digit | Operator_symbol
+                sBuilder.append(nextChar);
+                nextChar = getNextCharacterFromSource();
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Get a string token and set the type of the token to be deleted
+     * Spaces -> ( ’ ’ | ht | Eol )+
+     *
+     * @return a delete token
+     */
+    private Token getSpaceToken(String currentCharacter) {
+        Token deleteToken = new Token();
+        deleteToken.setTokenType(TOKEN_TYPE_DELETE);
+        deleteToken.setLineNumberOfSourceWhereTokenIs(currentLineNumberInRPALSource);
+        StringBuilder sBuilder = new StringBuilder(currentCharacter);
+
+        String nextChar = getNextCharacterFromSource();
+        while (nextChar != null) { //null indicates the file ended
+            if (SpaceRegularExpression.matcher(nextChar).matches()) {
+                sBuilder.append(nextChar);
+                nextChar = getNextCharacterFromSource();
+            } else {
+                extraCharRead = nextChar;
+                break;
+            }
+        }
+
+        deleteToken.setTokenValue(sBuilder.toString());
+        return deleteToken;
+    }
+
+    /**
+     * Get a comment token and set the type of the token to be deleted
+     * Comment -> ’//’( ’’’’ | ’(’ | ’)’ | ’;’ | ’,’ | ’\’ | ’ ’ | ht | Letter | Digit | Operator_symbol )* Eol
+     *
+     * @return a delete token
+     */
+    private Token getCommentToken(String currentCharacter) {
+        Token commentToken = new Token();
+        commentToken.setTokenType(TOKEN_TYPE_DELETE);
+        commentToken.setLineNumberOfSourceWhereTokenIs(currentLineNumberInRPALSource);
+        StringBuilder sBuilder = new StringBuilder(currentCharacter);
+
+        String nextChar = getNextCharacterFromSource();
+        while (nextChar != null) { //null indicates the file ended
+            if (CommentRegularExpression.matcher(nextChar).matches()) {
+                sBuilder.append(nextChar);
+                nextChar = getNextCharacterFromSource();
+            } else if (nextChar.equals("\n"))
+                break;
+        }
+        commentToken.setTokenValue(sBuilder.toString());
+        return commentToken;
+    }
+
+    /**
+     * Gets punctuation tokens
+     * Punction ->’(’
+     * -> ’)’
+     * -> ’;’
+     * -> ’,’
+     *
+     * @return token that was built
+     */
+    private Token getPunctuationToken(String currentCharacter) {
+        Token punctuationToken = new Token();
+        punctuationToken.setLineNumberOfSourceWhereTokenIs(currentLineNumberInRPALSource);
+        punctuationToken.setTokenValue(currentCharacter);
+        switch (currentCharacter) {
+            case "(" -> punctuationToken.setTokenType(TOKEN_TYPE_L_PAREN);
+            case ")" -> punctuationToken.setTokenType(TOKEN_TYPE_R_PAREN);
+            case ";" -> punctuationToken.setTokenType(TOKEN_TYPE_SEMICOLON);
+            case "," -> punctuationToken.setTokenType(TOKEN_TYPE_COMMA);
+        }
+        return punctuationToken;
+    }
 }
 

@@ -1,31 +1,31 @@
 package com.proglangproj.group50.lexicalanalyzer;
 
-public class Token{
-  private int type;
-  private String value;
-  private int sourceLineNumber;
-  
-  public int getType(){
-    return type;
-  }
-  
-  public void setType(int type){
-    this.type = type;
-  }
-  
-  public String getValue(){
-    return value;
-  }
-  
-  public void setValue(String value){
-    this.value = value;
-  }
+public class Token {
+    private int tokenType;
+    private String tokenValue;
+    private int lineNumberOfSourceWhereTokenIs;
 
-  public int getSourceLineNumber(){
-    return sourceLineNumber;
-  }
+    public int getTokenType() {
+        return tokenType;
+    }
 
-  public void setSourceLineNumber(int sourceLineNumber){
-    this.sourceLineNumber = sourceLineNumber;
-  }
+    public void setTokenType(int tokenType) {
+        this.tokenType = tokenType;
+    }
+
+    public String getTokenValue() {
+        return tokenValue;
+    }
+
+    public void setTokenValue(String tokenValue) {
+        this.tokenValue = tokenValue;
+    }
+
+    public int getLineNumberOfSourceWhereTokenIs() {
+        return lineNumberOfSourceWhereTokenIs;
+    }
+
+    public void setLineNumberOfSourceWhereTokenIs(int lineNumberOfSourceWhereTokenIs) {
+        this.lineNumberOfSourceWhereTokenIs = lineNumberOfSourceWhereTokenIs;
+    }
 }

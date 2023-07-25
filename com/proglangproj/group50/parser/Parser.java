@@ -44,14 +44,14 @@ public class Parser{
       currentToken = s.readNextToken(); //load next token
     }while(isCurrentTokenType(Scanner.TOKEN_TYPE_DELETE));
     if(null != currentToken){
-      if(currentToken.getType()== Scanner.TOKEN_TYPE_IDENTIFIER){
-        createTerminalASTNode(ASTNodeType.IDENTIFIER, currentToken.getValue());
+      if(currentToken.getTokenType()== Scanner.TOKEN_TYPE_IDENTIFIER){
+        createTerminalASTNode(ASTNodeType.IDENTIFIER, currentToken.getTokenValue());
       }
-      else if(currentToken.getType()== Scanner.TOKEN_TYPE_INTEGER){
-        createTerminalASTNode(ASTNodeType.INTEGER, currentToken.getValue());
+      else if(currentToken.getTokenType()== Scanner.TOKEN_TYPE_INTEGER){
+        createTerminalASTNode(ASTNodeType.INTEGER, currentToken.getTokenValue());
       } 
-      else if(currentToken.getType()== Scanner.TOKEN_TYPE_STRING){
-        createTerminalASTNode(ASTNodeType.STRING, currentToken.getValue());
+      else if(currentToken.getTokenType()== Scanner.TOKEN_TYPE_STRING){
+        createTerminalASTNode(ASTNodeType.STRING, currentToken.getTokenValue());
       }
     }
   }
@@ -59,7 +59,7 @@ public class Parser{
   private boolean isCurrentToken(int type, String value){
     if(currentToken==null)
       return false;
-    if(currentToken.getType()!=type || !currentToken.getValue().equals(value))
+    if(currentToken.getTokenType()!=type || !currentToken.getTokenValue().equals(value))
       return false;
     return true;
   }
@@ -67,7 +67,7 @@ public class Parser{
   private boolean isCurrentTokenType(int type){
     if(currentToken==null)
       return false;
-    if(currentToken.getType()==type)
+    if(currentToken.getTokenType()==type)
       return true;
     return false;
   }
@@ -115,7 +115,7 @@ public class Parser{
     ASTNode node = new ASTNode();
     node.setType(type);
     node.setValue(value);
-    node.setSourceLineNumber(currentToken.getSourceLineNumber());
+    node.setSourceLineNumber(currentToken.getLineNumberOfSourceWhereTokenIs());
     stack.push(node);
   }
   
@@ -365,9 +365,9 @@ public class Parser{
     
     boolean plus = true;
     while(isCurrentToken(Scanner.TOKEN_TYPE_OPERATOR, "+")||isCurrentToken(Scanner.TOKEN_TYPE_OPERATOR, "-")){
-      if(currentToken.getValue().equals("+"))
+      if(currentToken.getTokenValue().equals("+"))
         plus = true;
-      else if(currentToken.getValue().equals("-"))
+      else if(currentToken.getTokenValue().equals("-"))
         plus = false;
       readNT();
       procAT(); //extra readNT in procAT()
@@ -390,9 +390,9 @@ public class Parser{
     //extra readNT in procAF()
     boolean mult = true;
     while(isCurrentToken(Scanner.TOKEN_TYPE_OPERATOR, "*")||isCurrentToken(Scanner.TOKEN_TYPE_OPERATOR, "/")){
-      if(currentToken.getValue().equals("*"))
+      if(currentToken.getTokenValue().equals("*"))
         mult = true;
-      else if(currentToken.getValue().equals("/"))
+      else if(currentToken.getTokenValue().equals("/"))
         mult = false;
       readNT();
       procAF(); //extra readNT in procAF()
