@@ -1,8 +1,8 @@
 package com.proglangproj.group50.abstractsyntaxtree;
 
 /**
- * Type of abstract syntax tree node. As specified in the RPAL phrase structure grammar.
- * @author Raj
+ * Type of AST node. As specified in RPAL grammar.
+
  */
 public enum ASTNodeType{
   //General
@@ -14,12 +14,6 @@ public enum ASTNodeType{
   LET("let"),
   LAMBDA("lambda"),
   WHERE("where"),
-  
-  //Tuple expressions
-  TAU("tau"),
-  AUG("aug"),
-  CONDITIONAL("->"),
-  
   //Boolean Expressions
   OR("or"),
   AND("&"),
@@ -30,6 +24,12 @@ public enum ASTNodeType{
   LE("le"),
   EQ("eq"),
   NE("ne"),
+
+  //Tuple expressions
+  TAU("tau"),
+  AUG("aug"),
+  CONDITIONAL("->"),
+
   
   //Arithmetic Expressions
   PLUS("+"),
@@ -39,21 +39,21 @@ public enum ASTNodeType{
   DIV("/"),
   EXP("**"),
   AT("@"),
-  
-  //Rators and Rands
-  GAMMA("gamma"),
-  TRUE("<true>"),
-  FALSE("<false>"),
-  NIL("<nil>"),
-  DUMMY("<dummy>"),
-  
+
   //Definitions
   WITHIN("within"),
   SIMULTDEF("and"),
   REC("rec"),
   EQUAL("="),
   FCNFORM("function_form"),
-  
+
+  //Rators and Rands
+  GAMMA("gamma"),
+  TRUE("<true>"),
+  FALSE("<false>"),
+  NIL("<nil>"),
+  DUMMY("<dummy>"),
+
   //Variables
   PAREN("<()>"),
   COMMA(","),
@@ -61,13 +61,13 @@ public enum ASTNodeType{
   //Post-standardize
   YSTAR("<Y*>"),
   
-  //For program evaluation only. Will never appear in a standardized or non-standardized AST. 
+  //not in AST or ST, For program evaluation only
   BETA(""),
   DELTA(""),
   ETA(""),
   TUPLE("");
   
-  private String printName; //used for printing AST representation
+  private String printName; //use to  print AST
   
   private ASTNodeType(String name){
     printName = name;

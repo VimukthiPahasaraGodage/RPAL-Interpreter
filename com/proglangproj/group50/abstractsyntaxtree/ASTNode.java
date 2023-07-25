@@ -3,8 +3,8 @@ package com.proglangproj.group50.abstractsyntaxtree;
 import com.proglangproj.group50.cse_machine.NodeCopier;
 
 /**
- * Abstract Syntax Tree node. Uses a first-child, next-sibling representation.
- * @author Raj
+ * AST node. Uses  first-child, next-sibling representation.
+ *
  */
 public class ASTNode{
   private int Source_Line_Num;
@@ -13,9 +13,17 @@ public class ASTNode{
   private ASTNode Sibling;
   private String val;
 
-  
+  // Getters and Setters
   public String getName(){
     return type.name();
+  }
+
+  public int getSource_Line_Num(){
+    return Source_Line_Num;
+  }
+
+  public void setSource_Line_Num(int Source_Line_Num){
+    this.Source_Line_Num = Source_Line_Num;
   }
 
   public ASTNodeType getType(){
@@ -54,11 +62,4 @@ public class ASTNode{
     return Node_Copier.copy(this);
   }
 
-  public int getSource_Line_Num(){
-    return Source_Line_Num;
-  }
-
-  public void setSource_Line_Num(int Source_Line_Num){
-    this.Source_Line_Num = Source_Line_Num;
-  }
 }

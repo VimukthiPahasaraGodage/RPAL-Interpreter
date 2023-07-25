@@ -215,24 +215,11 @@ public class AST{
         node.getChild().setSibling(Construct_Lambda_Chain(Child_Sibling));
         break;
       default:
-        // Node types we do NOT standardize:
-        // CSE Optimization Rule 6 (binops)
-        // OR
-        // AND
-        // PLUS
-        // MINUS
-        // MULT
-        // DIV
-        // EXP
-        // GR
-        // GE
-        // LS
-        // LE
-        // EQ
-        // NE
-        // CSE Optimization Rule 7 (unops)
-        // NOT
-        // NEG
+        // Node types do NOT standardize:
+        // CSE Optimization Rule 6 (bin ops)
+        // OR, AND, PLUS, MINUS, MULT, DIV, EXP, GR, GE, LS, LE, EQ, NE
+        // CSE Optimization Rule 7 (un ops)
+        // NOT,NEG
         // CSE Optimization Rule 8 (conditionals)
         // CONDITIONAL
         // CSE Optimization Rule 9, 10 (tuples)
