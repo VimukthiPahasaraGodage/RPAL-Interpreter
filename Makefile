@@ -22,10 +22,8 @@ CLASSES = \
         com/proglangproj/group50/cse_machine/EvaluationError.java \
         com/proglangproj/group50/cse_machine/NodeCopier.java \
         com/proglangproj/group50/cse_machine/Tuple.java \
-        com/proglangproj/group50/lexicalanalyzer/LexicalRegexPatterns.java \
         com/proglangproj/group50/lexicalanalyzer/Scanner.java \
         com/proglangproj/group50/lexicalanalyzer/Token.java \
-        com/proglangproj/group50/lexicalanalyzer/TokenType.java \
         com/proglangproj/group50/parser/ParseException.java \
         com/proglangproj/group50/parser/Parser.java \
         rpal20.java \

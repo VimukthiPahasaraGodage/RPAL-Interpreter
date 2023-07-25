@@ -1,15 +1,15 @@
 package com.proglangproj.group50.lexicalanalyzer;
 
 public class Token{
-  private TokenType type;
+  private int type;
   private String value;
   private int sourceLineNumber;
   
-  public TokenType getType(){
+  public int getType(){
     return type;
   }
   
-  public void setType(TokenType type){
+  public void setType(int type){
     this.type = type;
   }
   

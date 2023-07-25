@@ -7,8 +7,57 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class Scanner{
+
+  /*
+   * Declaration of constant integer values for each possible token type
+   */
+  public static final int TOKEN_TYPE_IDENTIFIER = 0;
+  public static final int TOKEN_TYPE_INTEGER = 1;
+  public static final int TOKEN_TYPE_STRING = 2;
+  public static final int TOKEN_TYPE_OPERATOR = 3;
+  public static final int TOKEN_TYPE_DELETE = 4;
+  public static final int TOKEN_TYPE_L_PAREN = 5;
+  public static final int TOKEN_TYPE_R_PAREN = 6;
+  public static final int TOKEN_TYPE_SEMICOLON = 7;
+  public static final int TOKEN_TYPE_COMMA = 8;
+  public static final int TOKEN_TYPE_RESERVED = 9;
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+  /*
+   * Declaration of
+   */
+  private static final String letterRegexString = "a-zA-Z";
+  private static final String digitRegexString = "\\d";
+  private static final String spaceRegexString = "[\\s\\t\\n]";
+  private static final String punctuationRegexString = "();,";
+  private static final String opSymbolRegexString = "+-/~:=|!#%_{}\"*<>.&$^\\[\\]?@";
+  private static final String opSymbolToEscapeString = "([*<>.&$^?])";
+
+  public static final Pattern LetterPattern = Pattern.compile("["+letterRegexString+"]");
+
+  public static final Pattern IdentifierPattern = Pattern.compile("["+letterRegexString+digitRegexString+"_]");
+
+  public static final Pattern DigitPattern = Pattern.compile(digitRegexString);
+
+  public static final Pattern PunctuationPattern = Pattern.compile("["+punctuationRegexString+"]");
+
+  public static final String opSymbolRegex = "[" + escapeMetaChars(opSymbolRegexString, opSymbolToEscapeString) + "]";
+  public static final Pattern OpSymbolPattern = Pattern.compile(opSymbolRegex);
+
+  public static final Pattern StringPattern = Pattern.compile("[ \\t\\n\\\\"+punctuationRegexString+letterRegexString+digitRegexString+escapeMetaChars(opSymbolRegexString, opSymbolToEscapeString) +"]");
+
+  public static final Pattern SpacePattern = Pattern.compile(spaceRegexString);
+
+  public static final Pattern CommentPattern = Pattern.compile("[ \\t\\'\\\\ \\r"+punctuationRegexString+letterRegexString+digitRegexString+escapeMetaChars(opSymbolRegexString, opSymbolToEscapeString)+"]"); //the \\r is for Windows LF; not really required since we're targeting *nix systems
+
+  private static String escapeMetaChars(String inputString, String charsToEscape){
+    return inputString.replaceAll(charsToEscape,"\\\\\\\\$1");
+  }
+
   private BufferedReader buffer;
   private String extraCharRead;
   private final List<String> reservedIdentifiers = Arrays.asList(new String[]{"let","in","within","fn","where","aug","or",
@@ -32,13 +81,13 @@ public class Scanner{
       nextChar = extraCharRead;
       extraCharRead = null;
     } else
-      nextChar = readNextChar();
+      nextChar = getNextCharacterFromSource();
     if(nextChar!=null)
       nextToken = buildToken(nextChar);
     return nextToken;
   }
 
-  private String readNextChar(){
+  private String getNextCharacterFromSource(){
     String nextChar = null;
     try{
       int c = buffer.read();
@@ -59,22 +108,22 @@ public class Scanner{
    */
   private Token buildToken(String currentChar){
     Token nextToken = null;
-    if(LexicalRegexPatterns.LetterPattern.matcher(currentChar).matches()){
+    if(LetterPattern.matcher(currentChar).matches()){
       nextToken = buildIdentifierToken(currentChar);
     }
-    else if(LexicalRegexPatterns.DigitPattern.matcher(currentChar).matches()){
+    else if(DigitPattern.matcher(currentChar).matches()){
       nextToken = buildIntegerToken(currentChar);
     }
-    else if(LexicalRegexPatterns.OpSymbolPattern.matcher(currentChar).matches()){ //comment tokens are also entered from here
+    else if(OpSymbolPattern.matcher(currentChar).matches()){ //comment tokens are also entered from here
       nextToken = buildOperatorToken(currentChar);
     }
     else if(currentChar.equals("\'")){
       nextToken = buildStringToken(currentChar);
     }
-    else if(LexicalRegexPatterns.SpacePattern.matcher(currentChar).matches()){
+    else if(SpacePattern.matcher(currentChar).matches()){
       nextToken = buildSpaceToken(currentChar);
     }
-    else if(LexicalRegexPatterns.PunctuationPattern.matcher(currentChar).matches()){
+    else if(PunctuationPattern.matcher(currentChar).matches()){
       nextToken = buildPunctuationPattern(currentChar);
     }
     return nextToken;
@@ -88,15 +137,15 @@ public class Scanner{
    */
   private Token buildIdentifierToken(String currentChar){
     Token identifierToken = new Token();
-    identifierToken.setType(TokenType.IDENTIFIER);
+    identifierToken.setType(TOKEN_TYPE_IDENTIFIER);
     identifierToken.setSourceLineNumber(sourceLineNumber);
     StringBuilder sBuilder = new StringBuilder(currentChar);
     
-    String nextChar = readNextChar();
+    String nextChar = getNextCharacterFromSource();
     while(nextChar!=null){ //null indicates the file ended
-      if(LexicalRegexPatterns.IdentifierPattern.matcher(nextChar).matches()){
+      if(IdentifierPattern.matcher(nextChar).matches()){
         sBuilder.append(nextChar);
-        nextChar = readNextChar();
+        nextChar = getNextCharacterFromSource();
       }
       else{
         extraCharRead = nextChar;
@@ -106,7 +155,7 @@ public class Scanner{
     
     String value = sBuilder.toString();
     if(reservedIdentifiers.contains(value))
-      identifierToken.setType(TokenType.RESERVED);
+      identifierToken.setType(TOKEN_TYPE_RESERVED);
     
     identifierToken.setValue(value);
     return identifierToken;
@@ -120,15 +169,15 @@ public class Scanner{
    */
   private Token buildIntegerToken(String currentChar){
     Token integerToken = new Token();
-    integerToken.setType(TokenType.INTEGER);
+    integerToken.setType(TOKEN_TYPE_INTEGER);
     integerToken.setSourceLineNumber(sourceLineNumber);
     StringBuilder sBuilder = new StringBuilder(currentChar);
     
-    String nextChar = readNextChar();
+    String nextChar = getNextCharacterFromSource();
     while(nextChar!=null){ //null indicates the file ended
-      if(LexicalRegexPatterns.DigitPattern.matcher(nextChar).matches()){
+      if(DigitPattern.matcher(nextChar).matches()){
         sBuilder.append(nextChar);
-        nextChar = readNextChar();
+        nextChar = getNextCharacterFromSource();
       }
       else{
         extraCharRead = nextChar;
@@ -148,19 +197,19 @@ public class Scanner{
    */
   private Token buildOperatorToken(String currentChar){
     Token opSymbolToken = new Token();
-    opSymbolToken.setType(TokenType.OPERATOR);
+    opSymbolToken.setType(TOKEN_TYPE_OPERATOR);
     opSymbolToken.setSourceLineNumber(sourceLineNumber);
     StringBuilder sBuilder = new StringBuilder(currentChar);
     
-    String nextChar = readNextChar();
+    String nextChar = getNextCharacterFromSource();
     
     if(currentChar.equals("/") && nextChar.equals("/"))
       return buildCommentToken(currentChar+nextChar);
     
     while(nextChar!=null){ //null indicates the file ended
-      if(LexicalRegexPatterns.OpSymbolPattern.matcher(nextChar).matches()){
+      if(OpSymbolPattern.matcher(nextChar).matches()){
         sBuilder.append(nextChar);
-        nextChar = readNextChar();
+        nextChar = getNextCharacterFromSource();
       }
       else{
         extraCharRead = nextChar;
@@ -180,20 +229,20 @@ public class Scanner{
    */
   private Token buildStringToken(String currentChar){
     Token stringToken = new Token();
-    stringToken.setType(TokenType.STRING);
+    stringToken.setType(TOKEN_TYPE_STRING);
     stringToken.setSourceLineNumber(sourceLineNumber);
     StringBuilder sBuilder = new StringBuilder("");
     
-    String nextChar = readNextChar();
+    String nextChar = getNextCharacterFromSource();
     while(nextChar!=null){ //null indicates the file ended
       if(nextChar.equals("\'")){ //we just used up the last char we read, hence no need to set extraCharRead
         //sBuilder.append(nextChar);
         stringToken.setValue(sBuilder.toString());
         return stringToken;
       }
-      else if(LexicalRegexPatterns.StringPattern.matcher(nextChar).matches()){ //match Letter | Digit | Operator_symbol
+      else if(StringPattern.matcher(nextChar).matches()){ //match Letter | Digit | Operator_symbol
         sBuilder.append(nextChar);
-        nextChar = readNextChar();
+        nextChar = getNextCharacterFromSource();
       }
     }
     
@@ -202,15 +251,15 @@ public class Scanner{
   
   private Token buildSpaceToken(String currentChar){
     Token deleteToken = new Token();
-    deleteToken.setType(TokenType.DELETE);
+    deleteToken.setType(TOKEN_TYPE_DELETE);
     deleteToken.setSourceLineNumber(sourceLineNumber);
     StringBuilder sBuilder = new StringBuilder(currentChar);
     
-    String nextChar = readNextChar();
+    String nextChar = getNextCharacterFromSource();
     while(nextChar!=null){ //null indicates the file ended
-      if(LexicalRegexPatterns.SpacePattern.matcher(nextChar).matches()){
+      if(SpacePattern.matcher(nextChar).matches()){
         sBuilder.append(nextChar);
-        nextChar = readNextChar();
+        nextChar = getNextCharacterFromSource();
       }
       else{
         extraCharRead = nextChar;
@@ -224,15 +273,15 @@ public class Scanner{
   
   private Token buildCommentToken(String currentChar){
     Token commentToken = new Token();
-    commentToken.setType(TokenType.DELETE);
+    commentToken.setType(TOKEN_TYPE_DELETE);
     commentToken.setSourceLineNumber(sourceLineNumber);
     StringBuilder sBuilder = new StringBuilder(currentChar);
     
-    String nextChar = readNextChar();
+    String nextChar = getNextCharacterFromSource();
     while(nextChar!=null){ //null indicates the file ended
-      if(LexicalRegexPatterns.CommentPattern.matcher(nextChar).matches()){
+      if(CommentPattern.matcher(nextChar).matches()){
         sBuilder.append(nextChar);
-        nextChar = readNextChar();
+        nextChar = getNextCharacterFromSource();
       }
       else if(nextChar.equals("\n"))
         break;
@@ -246,15 +295,12 @@ public class Scanner{
     Token punctuationToken = new Token();
     punctuationToken.setSourceLineNumber(sourceLineNumber);
     punctuationToken.setValue(currentChar);
-    if(currentChar.equals("("))
-      punctuationToken.setType(TokenType.L_PAREN);
-    else if(currentChar.equals(")"))
-      punctuationToken.setType(TokenType.R_PAREN);
-    else if(currentChar.equals(";"))
-      punctuationToken.setType(TokenType.SEMICOLON);
-    else if(currentChar.equals(","))
-      punctuationToken.setType(TokenType.COMMA);
-    
+    switch (currentChar) {
+      case "(" -> punctuationToken.setType(TOKEN_TYPE_L_PAREN);
+      case ")" -> punctuationToken.setType(TOKEN_TYPE_R_PAREN);
+      case ";" -> punctuationToken.setType(TOKEN_TYPE_SEMICOLON);
+      case "," -> punctuationToken.setType(TOKEN_TYPE_COMMA);
+    }
     return punctuationToken;
   }
 }
