@@ -30,8 +30,8 @@ public class Beta extends ASTNode{
     elseBody = new Stack<ASTNode>();
   }
   
-  public Beta accept(NodeCopier nodeCopier){
-    return nodeCopier.copy(this);
+  public Beta Accept(NodeCopier Node_Copier){
+    return Node_Copier.copy(this);
   }
 
   public Stack<ASTNode> getThenBody(){

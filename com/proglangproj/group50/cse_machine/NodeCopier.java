@@ -20,34 +20,34 @@ public class NodeCopier{
   public ASTNode copy(ASTNode astNode){
     ASTNode copy = new ASTNode();
     if(astNode.getChild()!=null)
-      copy.setChild(astNode.getChild().accept(this));
+      copy.setChild(astNode.getChild().Accept(this));
     if(astNode.getSibling()!=null)
-      copy.setSibling(astNode.getSibling().accept(this));
+      copy.setSibling(astNode.getSibling().Accept(this));
     copy.setType(astNode.getType());
-    copy.setValue(astNode.getValue());
-    copy.setSourceLineNumber(astNode.getSourceLineNumber());
+    copy.setVal(astNode.getVal());
+    copy.setSource_Line_Num(astNode.getSource_Line_Num());
     return copy;
   }
   
   public Beta copy(Beta beta){
     Beta copy = new Beta();
     if(beta.getChild()!=null)
-      copy.setChild(beta.getChild().accept(this));
+      copy.setChild(beta.getChild().Accept(this));
     if(beta.getSibling()!=null)
-      copy.setSibling(beta.getSibling().accept(this));
+      copy.setSibling(beta.getSibling().Accept(this));
     copy.setType(beta.getType());
-    copy.setValue(beta.getValue());
-    copy.setSourceLineNumber(beta.getSourceLineNumber());
+    copy.setVal(beta.getVal());
+    copy.setSource_Line_Num(beta.getSource_Line_Num());
     
     Stack<ASTNode> thenBodyCopy = new Stack<ASTNode>();
     for(ASTNode thenBodyElement: beta.getThenBody()){
-      thenBodyCopy.add(thenBodyElement.accept(this));
+      thenBodyCopy.add(thenBodyElement.Accept(this));
     }
     copy.setThenBody(thenBodyCopy);
     
     Stack<ASTNode> elseBodyCopy = new Stack<ASTNode>();
     for(ASTNode elseBodyElement: beta.getElseBody()){
-      elseBodyCopy.add(elseBodyElement.accept(this));
+      elseBodyCopy.add(elseBodyElement.Accept(this));
     }
     copy.setElseBody(elseBodyCopy);
     
@@ -57,14 +57,14 @@ public class NodeCopier{
   public Eta copy(Eta eta){
     Eta copy = new Eta();
     if(eta.getChild()!=null)
-      copy.setChild(eta.getChild().accept(this));
+      copy.setChild(eta.getChild().Accept(this));
     if(eta.getSibling()!=null)
-      copy.setSibling(eta.getSibling().accept(this));
+      copy.setSibling(eta.getSibling().Accept(this));
     copy.setType(eta.getType());
-    copy.setValue(eta.getValue());
-    copy.setSourceLineNumber(eta.getSourceLineNumber());
+    copy.setVal(eta.getVal());
+    copy.setSource_Line_Num(eta.getSource_Line_Num());
     
-    copy.setDelta(eta.getDelta().accept(this));
+    copy.setDelta(eta.getDelta().Accept(this));
     
     return copy;
   }
@@ -72,17 +72,17 @@ public class NodeCopier{
   public Delta copy(Delta delta){
     Delta copy = new Delta();
     if(delta.getChild()!=null)
-      copy.setChild(delta.getChild().accept(this));
+      copy.setChild(delta.getChild().Accept(this));
     if(delta.getSibling()!=null)
-      copy.setSibling(delta.getSibling().accept(this));
+      copy.setSibling(delta.getSibling().Accept(this));
     copy.setType(delta.getType());
-    copy.setValue(delta.getValue());
+    copy.setVal(delta.getVal());
     copy.setIndex(delta.getIndex());
-    copy.setSourceLineNumber(delta.getSourceLineNumber());
+    copy.setSource_Line_Num(delta.getSource_Line_Num());
     
     Stack<ASTNode> bodyCopy = new Stack<ASTNode>();
     for(ASTNode bodyElement: delta.getBody()){
-      bodyCopy.add(bodyElement.accept(this));
+      bodyCopy.add(bodyElement.Accept(this));
     }
     copy.setBody(bodyCopy);
     
@@ -98,12 +98,12 @@ public class NodeCopier{
   public Tuple copy(Tuple tuple){
     Tuple copy = new Tuple();
     if(tuple.getChild()!=null)
-      copy.setChild(tuple.getChild().accept(this));
+      copy.setChild(tuple.getChild().Accept(this));
     if(tuple.getSibling()!=null)
-      copy.setSibling(tuple.getSibling().accept(this));
+      copy.setSibling(tuple.getSibling().Accept(this));
     copy.setType(tuple.getType());
-    copy.setValue(tuple.getValue());
-    copy.setSourceLineNumber(tuple.getSourceLineNumber());
+    copy.setVal(tuple.getVal());
+    copy.setSource_Line_Num(tuple.getSource_Line_Num());
     return copy;
   }
 }

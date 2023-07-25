@@ -10,22 +10,22 @@ public class Tuple extends ASTNode{
   }
   
   @Override
-  public String getValue(){
+  public String getVal(){
     ASTNode childNode = getChild();
     if(childNode==null)
       return "nil";
     
     String printValue = "(";
     while(childNode.getSibling()!=null){
-      printValue += childNode.getValue() + ", ";
+      printValue += childNode.getVal() + ", ";
       childNode = childNode.getSibling();
     }
-    printValue += childNode.getValue() + ")";
+    printValue += childNode.getVal() + ")";
     return printValue;
   }
   
-  public Tuple accept(NodeCopier nodeCopier){
-    return nodeCopier.copy(this);
+  public Tuple Accept(NodeCopier Node_Copier){
+    return Node_Copier.copy(this);
   }
   
 }

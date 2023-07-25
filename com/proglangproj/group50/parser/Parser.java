@@ -115,7 +115,7 @@ public class Parser{
         child.setSibling(node.getChild());
       }
       node.setChild(child); // setting up the child
-      node.setSourceLineNumber(child.getSourceLineNumber());
+      node.setSource_Line_Num(child.getSource_Line_Num());
       aryness = aryness -1;
     }
     Stack.push(node);
@@ -123,9 +123,9 @@ public class Parser{
 
   private void Create_Terminal_ASTNode(ASTNodeType type, String val){
     ASTNode node = new ASTNode();
-    node.setValue(val);
+    node.setVal(val);
     node.setType(type);
-    node.setSourceLineNumber(Cur_Token.getLineNumberOfSourceWhereTokenIs());
+    node.setSource_Line_Num(Cur_Token.getLineNumberOfSourceWhereTokenIs());
     Stack.push(node);
   }
   

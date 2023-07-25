@@ -7,11 +7,12 @@ import com.proglangproj.group50.cse_machine.NodeCopier;
  * @author Raj
  */
 public class ASTNode{
+  private int Source_Line_Num;
   private ASTNodeType type;
-  private String value;
-  private ASTNode child;
-  private ASTNode sibling;
-  private int sourceLineNumber;
+   private ASTNode Child;
+  private ASTNode Sibling;
+  private String val;
+
   
   public String getName(){
     return type.name();
@@ -26,38 +27,38 @@ public class ASTNode{
   }
 
   public ASTNode getChild(){
-    return child;
+    return Child;
   }
 
   public void setChild(ASTNode child){
-    this.child = child;
+    this.Child = child;
   }
 
   public ASTNode getSibling(){
-    return sibling;
+    return Sibling;
   }
 
   public void setSibling(ASTNode sibling){
-    this.sibling = sibling;
+    this.Sibling = sibling;
   }
 
-  public String getValue(){
-    return value;
+  public String getVal(){
+    return val;
   }
 
-  public void setValue(String value){
-    this.value = value;
+  public void setVal(String val){
+    this.val = val;
   }
 
-  public ASTNode accept(NodeCopier nodeCopier){
-    return nodeCopier.copy(this);
+  public ASTNode Accept(NodeCopier Node_Copier){
+    return Node_Copier.copy(this);
   }
 
-  public int getSourceLineNumber(){
-    return sourceLineNumber;
+  public int getSource_Line_Num(){
+    return Source_Line_Num;
   }
 
-  public void setSourceLineNumber(int sourceLineNumber){
-    this.sourceLineNumber = sourceLineNumber;
+  public void setSource_Line_Num(int Source_Line_Num){
+    this.Source_Line_Num = Source_Line_Num;
   }
 }

@@ -22,13 +22,13 @@ public class Delta extends ASTNode{
     boundVars = new ArrayList<String>();
   }
   
-  public Delta accept(NodeCopier nodeCopier){
-    return nodeCopier.copy(this);
+  public Delta Accept(NodeCopier Node_Copier){
+    return Node_Copier.copy(this);
   }
   
   //used if the program evaluation results in a partial application
   @Override
-  public String getValue(){
+  public String getVal(){
     return "[lambda closure: "+boundVars.get(0)+": "+index+"]";
   }
 

@@ -41,10 +41,10 @@ public class AST{
   private void Print_ASTNode_Details(ASTNode node, String Print_Prefix){
     if(node.getType() == ASTNodeType.IDENTIFIER ||
         node.getType() == ASTNodeType.INTEGER){
-      System.out.printf(Print_Prefix + node.getType().getPrintName()+"\n",node.getValue());
+      System.out.printf(Print_Prefix + node.getType().getPrintName()+"\n",node.getVal());
     }
     else if(node.getType() == ASTNodeType.STRING)
-      System.out.printf(Print_Prefix + node.getType().getPrintName()+"\n",node.getValue());
+      System.out.printf(Print_Prefix + node.getType().getPrintName()+"\n",node.getVal());
     else {
       System.out.println(Print_Prefix + node.getType().getPrintName());
     }
@@ -203,7 +203,7 @@ public class AST{
         X_With_Sibling_Gamma.setChild(X.getChild());
         X_With_Sibling_Gamma.setSibling(Gamma_Node);
         X_With_Sibling_Gamma.setType(X.getType());
-        X_With_Sibling_Gamma.setValue(X.getValue());
+        X_With_Sibling_Gamma.setVal(X.getVal());
         node.setChild(X_With_Sibling_Gamma);
         node.setType(ASTNodeType.EQUAL);
         break;
@@ -327,12 +327,12 @@ public class AST{
         ASTNode commaNode = node.getChild();
         ASTNode Child_Node = commaNode.getChild();
         while(Child_Node != null){
-          delta_temp.addBoundVars(Child_Node.getValue());
+          delta_temp.addBoundVars(Child_Node.getVal());
           Child_Node = Child_Node.getSibling();
         }
       }
       else {
-        delta_temp.addBoundVars(node.getChild().getValue());
+        delta_temp.addBoundVars(node.getChild().getVal());
       }
       body.push(delta_temp); //add this new delta to the existing delta's body
       return;
