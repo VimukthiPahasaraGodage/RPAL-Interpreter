@@ -90,7 +90,7 @@ public class AST{
         node.setType(ASTNodeType.GAMMA);
         break;
       case WHERE:
-        //where will be made as LET node and standardize that
+        //where will be made as LET node and standardize
         //       WHERE               LET
         //       /   \             /     \
         //      P    EQUAL   ->  EQUAL   P
