@@ -4,7 +4,6 @@ import com.proglangproj.group50.abstractsyntaxtree.*;
 import com.proglangproj.group50.cse_machine.*;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
@@ -31,7 +30,7 @@ public class rpal20 {
         }
         AST ast = buildAST(rpalProgFile);
         if (ast != null) {
-            ast.standardize();
+            ast.Standardize();
             String evaluationResult = evaluateST(ast);
             if (saveToFile) {
                 saveOutput(outputFile, evaluationResult);
@@ -46,7 +45,7 @@ public class rpal20 {
         try{
             Scanner scanner = new Scanner(fileName);
             Parser parser = new Parser(scanner);
-            ast = parser.buildAST();
+            ast = parser.Build_AST();
         }catch(IOException e){
             throw new ParseException("ERROR: Could not read from file: " + fileName);
         }
