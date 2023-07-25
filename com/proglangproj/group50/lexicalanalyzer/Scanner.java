@@ -93,7 +93,6 @@ public class Scanner {
             } else
                 buffer.close();
         } catch (IOException e) {
-          System.out.println("Unexpected error occurred while reading the RPAL source file");
         }
         return nextChar;
     }
@@ -190,9 +189,9 @@ public class Scanner {
      * @return token that was built
      */
     private Token getOperatorToken(String currentCharacter) {
-        Token opSymbolToken = new Token();
-        opSymbolToken.setTokenType(TOKEN_TYPE_OPERATOR);
-        opSymbolToken.setLineNumberOfSourceWhereTokenIs(currentLineNumberInRPALSource);
+        Token operatorSymbolToken = new Token();
+        operatorSymbolToken.setTokenType(TOKEN_TYPE_OPERATOR);
+        operatorSymbolToken.setLineNumberOfSourceWhereTokenIs(currentLineNumberInRPALSource);
         StringBuilder sBuilder = new StringBuilder(currentCharacter);
 
         String nextChar = getNextCharacterFromSource();
@@ -210,8 +209,8 @@ public class Scanner {
             }
         }
 
-        opSymbolToken.setTokenValue(sBuilder.toString());
-        return opSymbolToken;
+        operatorSymbolToken.setTokenValue(sBuilder.toString());
+        return operatorSymbolToken;
     }
 
     /**
@@ -248,9 +247,9 @@ public class Scanner {
      * @return a delete token
      */
     private Token getSpaceToken(String currentCharacter) {
-        Token deleteToken = new Token();
-        deleteToken.setTokenType(TOKEN_TYPE_DELETE);
-        deleteToken.setLineNumberOfSourceWhereTokenIs(currentLineNumberInRPALSource);
+        Token spaceDeleteToken = new Token();
+        spaceDeleteToken.setTokenType(TOKEN_TYPE_DELETE);
+        spaceDeleteToken.setLineNumberOfSourceWhereTokenIs(currentLineNumberInRPALSource);
         StringBuilder sBuilder = new StringBuilder(currentCharacter);
 
         String nextChar = getNextCharacterFromSource();
@@ -264,8 +263,8 @@ public class Scanner {
             }
         }
 
-        deleteToken.setTokenValue(sBuilder.toString());
-        return deleteToken;
+        spaceDeleteToken.setTokenValue(sBuilder.toString());
+        return spaceDeleteToken;
     }
 
     /**
@@ -275,9 +274,9 @@ public class Scanner {
      * @return a delete token
      */
     private Token getCommentToken(String currentCharacter) {
-        Token commentToken = new Token();
-        commentToken.setTokenType(TOKEN_TYPE_DELETE);
-        commentToken.setLineNumberOfSourceWhereTokenIs(currentLineNumberInRPALSource);
+        Token commentDeleteToken = new Token();
+        commentDeleteToken.setTokenType(TOKEN_TYPE_DELETE);
+        commentDeleteToken.setLineNumberOfSourceWhereTokenIs(currentLineNumberInRPALSource);
         StringBuilder sBuilder = new StringBuilder(currentCharacter);
 
         String nextChar = getNextCharacterFromSource();
@@ -288,8 +287,8 @@ public class Scanner {
             } else if (nextChar.equals("\n"))
                 break;
         }
-        commentToken.setTokenValue(sBuilder.toString());
-        return commentToken;
+        commentDeleteToken.setTokenValue(sBuilder.toString());
+        return commentDeleteToken;
     }
 
     /**
