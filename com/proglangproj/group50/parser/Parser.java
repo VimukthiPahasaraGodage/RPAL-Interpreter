@@ -353,15 +353,15 @@ public class Parser{
   private void procA(){
     if(isCurrentToken(Scanner.TOKEN_TYPE_OPERATOR, "+")){ //A -> '+' At
       readNT();
-      procAT(); //extra readNT in procAT()
+      Proc_AT(); //extra readNT in procAT()
     }
     else if(isCurrentToken(Scanner.TOKEN_TYPE_OPERATOR, "-")){ //A -> '-' At => 'neg'
       readNT();
-      procAT(); //extra readNT in procAT()
+      Proc_AT(); //extra readNT in procAT()
       buildNAryASTNode(ASTNodeType.NEG, 1);
     }
     else
-      procAT(); //extra readNT in procAT()
+      Proc_AT(); //extra readNT in procAT()
     
     boolean plus = true;
     while(isCurrentToken(Scanner.TOKEN_TYPE_OPERATOR, "+")||isCurrentToken(Scanner.TOKEN_TYPE_OPERATOR, "-")){
@@ -370,7 +370,7 @@ public class Parser{
       else if(currentToken.getTokenValue().equals("-"))
         plus = false;
       readNT();
-      procAT(); //extra readNT in procAT()
+      Proc_AT(); //extra readNT in procAT()
       if(plus) //A -> A '+' At => '+'
         buildNAryASTNode(ASTNodeType.PLUS, 2);
       else //A -> A '-' At => '-'
@@ -385,7 +385,7 @@ public class Parser{
    *    -> Af;
    * </pre>
    */
-  private void procAT(){
+  private void Proc_AT(){
     procAF(); //At -> Af;
     //extra readNT in procAF()
     boolean mult = true;
