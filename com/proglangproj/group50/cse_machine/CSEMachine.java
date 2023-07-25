@@ -13,9 +13,9 @@ public class CSEMachine{
   private Delta rootDelta;
 
   public CSEMachine(AST ast){
-    if(!ast.isStandardized())
+    if(!ast.Is_Standardized())
       throw new RuntimeException("AST has NOT been standardized!"); //should never happen
-    rootDelta = ast.createDeltas();
+    rootDelta = ast.Create_Deltas();
     rootDelta.setLinkedEnv(new Environment()); //primitive environment
     valueStack = new Stack<ASTNode>();
   }
