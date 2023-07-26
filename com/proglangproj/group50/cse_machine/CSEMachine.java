@@ -14,32 +14,32 @@ public class CSEMachine {
 
     public CSEMachine(AbstractSyntaxTree ast) {
         if (!ast.isASTStandardized())
-            throw new RuntimeException("AbstractSyntaxTree has NOT been standardized!"); //should never happen
+            throw new RuntimeException("AbstractSyntaxTree has NOT been standardized!");
         rootDelta = ast.createDeltas();
         rootDelta.setLinkedEnv(new Environment()); //primitive environment
         valueStack = new Stack<AbstractSyntaxTreeNode>();
     }
 
-    private void printEvaluationErrorToSfdOut(int sourceLineNumber, String message) {
+    private void printEvaluationErrorToStdOut(int sourceLineNumber, String message) {
         System.out.println("Error :" + sourceLineNumber + ": " + message);
         System.exit(1);
     }
 
-    public void evaluateProgram() {
-        processControlStack(rootDelta, rootDelta.getLinkedEnv());
+    public void evaluateRPALProgram() {
+        processControlStructures(rootDelta, rootDelta.getLinkedEnv());
     }
 
-    private void processControlStack(DeltaControlStructure currentDelta, Environment currentEnv) {
+    private void processControlStructures(DeltaControlStructure currentDelta, Environment currentEnv) {
         //create a new control stack and add all of the delta's body to it so that the delta's body isn't
         //modified whenever the control stack is popped in all the functions below
         Stack<AbstractSyntaxTreeNode> controlStack = new Stack<AbstractSyntaxTreeNode>();
         controlStack.addAll(currentDelta.getBody());
 
         while (!controlStack.isEmpty())
-            processCurrentNode(currentDelta, currentEnv, controlStack);
+            processCurrentNodeOfControlStructure(currentDelta, currentEnv, controlStack);
     }
 
-    private void processCurrentNode(DeltaControlStructure currentDelta, Environment currentEnv, Stack<AbstractSyntaxTreeNode> currentControlStack) {
+    private void processCurrentNodeOfControlStructure(DeltaControlStructure currentDelta, Environment currentEnv, Stack<AbstractSyntaxTreeNode> currentControlStack) {
         AbstractSyntaxTreeNode node = currentControlStack.pop();
         if (!applyBinaryOperation(node) && !applyUnaryOperation(node)) {
             switch (node.getTypeOfASTNode()) {
@@ -64,15 +64,15 @@ public class CSEMachine {
     private boolean applyBinaryOperation(AbstractSyntaxTreeNode rator) {
         switch (rator.getTypeOfASTNode()) {
             case PLUS, MINUS, MULT, DIV, EXP, LS, LE, GR, GE -> {
-                binaryArithmeticOp(rator.getTypeOfASTNode());
+                binaryArithmeticOperation(rator.getTypeOfASTNode());
                 return true;
             }
             case EQ, NE -> {
-                binaryLogicalEqNeOp(rator.getTypeOfASTNode());
+                binaryLogicalEqualNotEqualOperation(rator.getTypeOfASTNode());
                 return true;
             }
             case OR, AND -> {
-                binaryLogicalOrAndOp(rator.getTypeOfASTNode());
+                binaryLogicalOrAndOperations(rator.getTypeOfASTNode());
                 return true;
             }
             case AUG -> {
@@ -85,11 +85,11 @@ public class CSEMachine {
         }
     }
 
-    private void binaryArithmeticOp(AbstractSyntaxTreeNodeType type) {
+    private void binaryArithmeticOperation(AbstractSyntaxTreeNodeType type) {
         AbstractSyntaxTreeNode rand1 = valueStack.pop();
         AbstractSyntaxTreeNode rand2 = valueStack.pop();
         if (rand1.getTypeOfASTNode() != AbstractSyntaxTreeNodeType.INTEGER || rand2.getTypeOfASTNode() != AbstractSyntaxTreeNodeType.INTEGER)
-            printEvaluationErrorToSfdOut(rand1.getLineNumberOfSourceFile(), "Expected two integers; was given \"" + rand1.getValueOfASTNode() + "\", \"" + rand2.getValueOfASTNode() + "\"");
+            printEvaluationErrorToStdOut(rand1.getLineNumberOfSourceFile(), "Expected two integers; was given \"" + rand1.getValueOfASTNode() + "\", \"" + rand2.getValueOfASTNode() + "\"");
 
         AbstractSyntaxTreeNode result = new AbstractSyntaxTreeNode();
         result.setTypeOfASTNode(AbstractSyntaxTreeNodeType.INTEGER);
@@ -139,26 +139,26 @@ public class CSEMachine {
         valueStack.push(result);
     }
 
-    private void binaryLogicalEqNeOp(AbstractSyntaxTreeNodeType type) {
+    private void binaryLogicalEqualNotEqualOperation(AbstractSyntaxTreeNodeType type) {
         AbstractSyntaxTreeNode rand1 = valueStack.pop();
         AbstractSyntaxTreeNode rand2 = valueStack.pop();
 
         if (rand1.getTypeOfASTNode() == AbstractSyntaxTreeNodeType.TRUE || rand1.getTypeOfASTNode() == AbstractSyntaxTreeNodeType.FALSE) {
             if (rand2.getTypeOfASTNode() != AbstractSyntaxTreeNodeType.TRUE && rand2.getTypeOfASTNode() != AbstractSyntaxTreeNodeType.FALSE)
-                printEvaluationErrorToSfdOut(rand1.getLineNumberOfSourceFile(), "Cannot compare dissimilar types; was given \"" + rand1.getValueOfASTNode() + "\", \"" + rand2.getValueOfASTNode() + "\"");
+                printEvaluationErrorToStdOut(rand1.getLineNumberOfSourceFile(), "Cannot compare dissimilar types; was given \"" + rand1.getValueOfASTNode() + "\", \"" + rand2.getValueOfASTNode() + "\"");
             compareTruthValues(rand1, rand2, type);
             return;
         }
 
         if (rand1.getTypeOfASTNode() != rand2.getTypeOfASTNode())
-            printEvaluationErrorToSfdOut(rand1.getLineNumberOfSourceFile(), "Cannot compare dissimilar types; was given \"" + rand1.getValueOfASTNode() + "\", \"" + rand2.getValueOfASTNode() + "\"");
+            printEvaluationErrorToStdOut(rand1.getLineNumberOfSourceFile(), "Cannot compare dissimilar types; was given \"" + rand1.getValueOfASTNode() + "\", \"" + rand2.getValueOfASTNode() + "\"");
 
         if (rand1.getTypeOfASTNode() == AbstractSyntaxTreeNodeType.STRING)
             compareStrings(rand1, rand2, type);
         else if (rand1.getTypeOfASTNode() == AbstractSyntaxTreeNodeType.INTEGER)
             compareIntegers(rand1, rand2, type);
         else
-            printEvaluationErrorToSfdOut(rand1.getLineNumberOfSourceFile(), "Don't know how to " + type + " \"" + rand1.getValueOfASTNode() + "\", \"" + rand2.getValueOfASTNode() + "\"");
+            printEvaluationErrorToStdOut(rand1.getLineNumberOfSourceFile(), "Don't know how to " + type + " \"" + rand1.getValueOfASTNode() + "\", \"" + rand2.getValueOfASTNode() + "\"");
 
     }
 
@@ -198,7 +198,7 @@ public class CSEMachine {
             pushTrueNode();
     }
 
-    private void binaryLogicalOrAndOp(AbstractSyntaxTreeNodeType type) {
+    private void binaryLogicalOrAndOperations(AbstractSyntaxTreeNodeType type) {
         AbstractSyntaxTreeNode rand1 = valueStack.pop();
         AbstractSyntaxTreeNode rand2 = valueStack.pop();
 
@@ -208,7 +208,7 @@ public class CSEMachine {
             return;
         }
 
-        printEvaluationErrorToSfdOut(rand1.getLineNumberOfSourceFile(), "Don't know how to " + type + " \"" + rand1.getValueOfASTNode() + "\", \"" + rand2.getValueOfASTNode() + "\"");
+        printEvaluationErrorToStdOut(rand1.getLineNumberOfSourceFile(), "Don't know how to " + type + " \"" + rand1.getValueOfASTNode() + "\", \"" + rand2.getValueOfASTNode() + "\"");
     }
 
     private void orAndTruthValues(AbstractSyntaxTreeNode rand1, AbstractSyntaxTreeNode rand2, AbstractSyntaxTreeNodeType type) {
@@ -230,7 +230,7 @@ public class CSEMachine {
         AbstractSyntaxTreeNode rand2 = valueStack.pop();
 
         if (rand1.getTypeOfASTNode() != AbstractSyntaxTreeNodeType.TUPLE)
-            printEvaluationErrorToSfdOut(rand1.getLineNumberOfSourceFile(), "Cannot augment a non-tuple \"" + rand1.getValueOfASTNode() + "\"");
+            printEvaluationErrorToStdOut(rand1.getLineNumberOfSourceFile(), "Cannot augment a non-tuple \"" + rand1.getValueOfASTNode() + "\"");
 
         AbstractSyntaxTreeNode childNode = rand1.getChildOfASTNode();
         if (childNode == null)
@@ -265,7 +265,7 @@ public class CSEMachine {
     private void not() {
         AbstractSyntaxTreeNode rand = valueStack.pop();
         if (rand.getTypeOfASTNode() != AbstractSyntaxTreeNodeType.TRUE && rand.getTypeOfASTNode() != AbstractSyntaxTreeNodeType.FALSE)
-            printEvaluationErrorToSfdOut(rand.getLineNumberOfSourceFile(), "Expecting a truthvalue; was given \"" + rand.getValueOfASTNode() + "\"");
+            printEvaluationErrorToStdOut(rand.getLineNumberOfSourceFile(), "Expecting a truthvalue; was given \"" + rand.getValueOfASTNode() + "\"");
 
         if (rand.getTypeOfASTNode() == AbstractSyntaxTreeNodeType.TRUE)
             pushFalseNode();
@@ -276,7 +276,7 @@ public class CSEMachine {
     private void neg() {
         AbstractSyntaxTreeNode rand = valueStack.pop();
         if (rand.getTypeOfASTNode() != AbstractSyntaxTreeNodeType.INTEGER)
-            printEvaluationErrorToSfdOut(rand.getLineNumberOfSourceFile(), "Expecting a truthvalue; was given \"" + rand.getValueOfASTNode() + "\"");
+            printEvaluationErrorToStdOut(rand.getLineNumberOfSourceFile(), "Expecting a truthvalue; was given \"" + rand.getValueOfASTNode() + "\"");
 
         AbstractSyntaxTreeNode result = new AbstractSyntaxTreeNode();
         result.setTypeOfASTNode(AbstractSyntaxTreeNodeType.INTEGER);
@@ -306,18 +306,18 @@ public class CSEMachine {
             //RULE 11
             else {
                 if (rand.getTypeOfASTNode() != AbstractSyntaxTreeNodeType.TUPLE)
-                    printEvaluationErrorToSfdOut(rand.getLineNumberOfSourceFile(), "Expected a tuple; was given \"" + rand.getValueOfASTNode() + "\"");
+                    printEvaluationErrorToStdOut(rand.getLineNumberOfSourceFile(), "Expected a tuple; was given \"" + rand.getValueOfASTNode() + "\"");
 
                 for (int i = 0; i < nextDelta.getBoundVars().size(); i++) {
                     newEnv.addMapping(nextDelta.getBoundVars().get(i), getNthTupleChild((Tuple) rand, i + 1)); //+ 1 coz tuple indexing starts at 1
                 }
             }
 
-            processControlStack(nextDelta, newEnv);
+            processControlStructures(nextDelta, newEnv);
         } else if (rator.getTypeOfASTNode() == AbstractSyntaxTreeNodeType.YSTAR) {
             //RULE 12
             if (rand.getTypeOfASTNode() != AbstractSyntaxTreeNodeType.DELTA)
-                printEvaluationErrorToSfdOut(rand.getLineNumberOfSourceFile(), "Expected a DeltaControlStructure; was given \"" + rand.getValueOfASTNode() + "\"");
+                printEvaluationErrorToStdOut(rand.getLineNumberOfSourceFile(), "Expected a DeltaControlStructure; was given \"" + rand.getValueOfASTNode() + "\"");
 
             EtaRecursiveFixedPoint etaNode = new EtaRecursiveFixedPoint();
             etaNode.setDelta((DeltaControlStructure) rand);
@@ -333,11 +333,11 @@ public class CSEMachine {
             currentControlStack.push(node);
         } else if (rator.getTypeOfASTNode() == AbstractSyntaxTreeNodeType.TUPLE) {
             tupleSelection((Tuple) rator, rand);
-        } else if (!evaluateReservedIdentifiers(rator, rand, currentControlStack))
-            printEvaluationErrorToSfdOut(rator.getLineNumberOfSourceFile(), "Don't know how to evaluate \"" + rator.getValueOfASTNode() + "\"");
+        } else if (!evaluatePredefinedFunctionsOfRPAL(rator, rand, currentControlStack))
+            printEvaluationErrorToStdOut(rator.getLineNumberOfSourceFile(), "Don't know how to evaluate \"" + rator.getValueOfASTNode() + "\"");
     }
 
-    private boolean evaluateReservedIdentifiers(AbstractSyntaxTreeNode rator, AbstractSyntaxTreeNode rand, Stack<AbstractSyntaxTreeNode> currentControlStack) {
+    private boolean evaluatePredefinedFunctionsOfRPAL(AbstractSyntaxTreeNode rator, AbstractSyntaxTreeNode rand, Stack<AbstractSyntaxTreeNode> currentControlStack) {
         switch (rator.getValueOfASTNode()) {
             case "Isinteger" -> {
                 checkTypeAndPushTrueOrFalse(rand, AbstractSyntaxTreeNodeType.INTEGER);
@@ -430,7 +430,7 @@ public class CSEMachine {
 
     private void stem(AbstractSyntaxTreeNode rand) {
         if (rand.getTypeOfASTNode() != AbstractSyntaxTreeNodeType.STRING)
-            printEvaluationErrorToSfdOut(rand.getLineNumberOfSourceFile(), "Expected a string; was given \"" + rand.getValueOfASTNode() + "\"");
+            printEvaluationErrorToStdOut(rand.getLineNumberOfSourceFile(), "Expected a string; was given \"" + rand.getValueOfASTNode() + "\"");
 
         if (rand.getValueOfASTNode().isEmpty())
             rand.setValueOfASTNode("");
@@ -442,7 +442,7 @@ public class CSEMachine {
 
     private void stern(AbstractSyntaxTreeNode rand) {
         if (rand.getTypeOfASTNode() != AbstractSyntaxTreeNodeType.STRING)
-            printEvaluationErrorToSfdOut(rand.getLineNumberOfSourceFile(), "Expected a string; was given \"" + rand.getValueOfASTNode() + "\"");
+            printEvaluationErrorToStdOut(rand.getLineNumberOfSourceFile(), "Expected a string; was given \"" + rand.getValueOfASTNode() + "\"");
 
         if (rand.getValueOfASTNode().isEmpty() || rand.getValueOfASTNode().length() == 1)
             rand.setValueOfASTNode("");
@@ -456,7 +456,7 @@ public class CSEMachine {
         currentControlStack.pop();
         AbstractSyntaxTreeNode rand2 = valueStack.pop();
         if (rand1.getTypeOfASTNode() != AbstractSyntaxTreeNodeType.STRING || rand2.getTypeOfASTNode() != AbstractSyntaxTreeNodeType.STRING)
-            printEvaluationErrorToSfdOut(rand1.getLineNumberOfSourceFile(), "Expected two strings; was given \"" + rand1.getValueOfASTNode() + "\", \"" + rand2.getValueOfASTNode() + "\"");
+            printEvaluationErrorToStdOut(rand1.getLineNumberOfSourceFile(), "Expected two strings; was given \"" + rand1.getValueOfASTNode() + "\", \"" + rand2.getValueOfASTNode() + "\"");
 
         AbstractSyntaxTreeNode result = new AbstractSyntaxTreeNode();
         result.setTypeOfASTNode(AbstractSyntaxTreeNodeType.STRING);
@@ -467,7 +467,7 @@ public class CSEMachine {
 
     private void itos(AbstractSyntaxTreeNode rand) {
         if (rand.getTypeOfASTNode() != AbstractSyntaxTreeNodeType.INTEGER)
-            printEvaluationErrorToSfdOut(rand.getLineNumberOfSourceFile(), "Expected an integer; was given \"" + rand.getValueOfASTNode() + "\"");
+            printEvaluationErrorToStdOut(rand.getLineNumberOfSourceFile(), "Expected an integer; was given \"" + rand.getValueOfASTNode() + "\"");
 
         rand.setTypeOfASTNode(AbstractSyntaxTreeNodeType.STRING); //all values are stored internally as strings, so nothing else to do
         valueStack.push(rand);
@@ -475,7 +475,7 @@ public class CSEMachine {
 
     private void order(AbstractSyntaxTreeNode rand) {
         if (rand.getTypeOfASTNode() != AbstractSyntaxTreeNodeType.TUPLE)
-            printEvaluationErrorToSfdOut(rand.getLineNumberOfSourceFile(), "Expected a tuple; was given \"" + rand.getValueOfASTNode() + "\"");
+            printEvaluationErrorToStdOut(rand.getLineNumberOfSourceFile(), "Expected a tuple; was given \"" + rand.getValueOfASTNode() + "\"");
 
         AbstractSyntaxTreeNode result = new AbstractSyntaxTreeNode();
         result.setTypeOfASTNode(AbstractSyntaxTreeNodeType.INTEGER);
@@ -486,7 +486,7 @@ public class CSEMachine {
 
     private void isNullTuple(AbstractSyntaxTreeNode rand) {
         if (rand.getTypeOfASTNode() != AbstractSyntaxTreeNodeType.TUPLE)
-            printEvaluationErrorToSfdOut(rand.getLineNumberOfSourceFile(), "Expected a tuple; was given \"" + rand.getValueOfASTNode() + "\"");
+            printEvaluationErrorToStdOut(rand.getLineNumberOfSourceFile(), "Expected a tuple; was given \"" + rand.getValueOfASTNode() + "\"");
 
         if (getNumChildren(rand) == 0)
             pushTrueNode();
@@ -497,11 +497,11 @@ public class CSEMachine {
     // RULE 10
     private void tupleSelection(Tuple rator, AbstractSyntaxTreeNode rand) {
         if (rand.getTypeOfASTNode() != AbstractSyntaxTreeNodeType.INTEGER)
-            printEvaluationErrorToSfdOut(rand.getLineNumberOfSourceFile(), "Non-integer tuple selection with \"" + rand.getValueOfASTNode() + "\"");
+            printEvaluationErrorToStdOut(rand.getLineNumberOfSourceFile(), "Non-integer tuple selection with \"" + rand.getValueOfASTNode() + "\"");
 
         AbstractSyntaxTreeNode result = getNthTupleChild(rator, Integer.parseInt(rand.getValueOfASTNode()));
         if (result == null)
-            printEvaluationErrorToSfdOut(rand.getLineNumberOfSourceFile(), "Tuple selection index " + rand.getValueOfASTNode() + " out of bounds");
+            printEvaluationErrorToStdOut(rand.getLineNumberOfSourceFile(), "Tuple selection index " + rand.getValueOfASTNode() + " out of bounds");
 
         valueStack.push(result);
     }
@@ -529,7 +529,7 @@ public class CSEMachine {
         else if (isReservedIdentifier(node.getValueOfASTNode()))
             valueStack.push(node);
         else
-            printEvaluationErrorToSfdOut(node.getLineNumberOfSourceFile(), "Undeclared identifier \"" + node.getValueOfASTNode() + "\"");
+            printEvaluationErrorToStdOut(node.getLineNumberOfSourceFile(), "Undeclared identifier \"" + node.getValueOfASTNode() + "\"");
     }
 
     //RULE 9
@@ -563,7 +563,7 @@ public class CSEMachine {
         AbstractSyntaxTreeNode conditionResultNode = valueStack.pop();
 
         if (conditionResultNode.getTypeOfASTNode() != AbstractSyntaxTreeNodeType.TRUE && conditionResultNode.getTypeOfASTNode() != AbstractSyntaxTreeNodeType.FALSE)
-            printEvaluationErrorToSfdOut(conditionResultNode.getLineNumberOfSourceFile(), "Expecting a truthvalue; found \"" + conditionResultNode.getValueOfASTNode() + "\"");
+            printEvaluationErrorToStdOut(conditionResultNode.getLineNumberOfSourceFile(), "Expecting a truthvalue; found \"" + conditionResultNode.getValueOfASTNode() + "\"");
 
         if (conditionResultNode.getTypeOfASTNode() == AbstractSyntaxTreeNodeType.TRUE)
             currentControlStack.addAll(node.getThenBody());

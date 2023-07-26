@@ -54,7 +54,7 @@ public class rpal20 {
 
     private static String evaluateST(AbstractSyntaxTree ast){
         CSEMachine cseMachine = new CSEMachine(ast);
-        cseMachine.evaluateProgram();
+        cseMachine.evaluateRPALProgram();
         return cseMachine.evaluationResult;
     }
 
