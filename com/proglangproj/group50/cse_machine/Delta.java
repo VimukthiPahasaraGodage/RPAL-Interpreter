@@ -7,41 +7,36 @@ import java.util.Stack;
 import com.proglangproj.group50.abstractsyntaxtree.ASTNode;
 import com.proglangproj.group50.abstractsyntaxtree.ASTNodeType;
 
-/**
- * Represents a lambda closure.
- * @author Raj
- */
+//lambda closure
 public class Delta extends ASTNode{
-  private List<String> boundVars;
-  private Environment linkedEnv; //environment in effect when this Delta was pushed on to the value stack
+  private List<String> bound_var_list;
+  private Environment linked_Environment;
   private Stack<ASTNode> body;
-  private int index;
+  private int element;
   
   public Delta(){
     setType(ASTNodeType.DELTA);
-    boundVars = new ArrayList<String>();
+    bound_var_list = new ArrayList<String>();
   }
   
-  public Delta Accept(NodeCopier Node_Copier){
-    return Node_Copier.copy(this);
-  }
-  
-  //used if the program evaluation results in a partial application
-  @Override
-  public String getVal(){
-    return "[lambda closure: "+boundVars.get(0)+": "+index+"]";
+  public Delta accept_Delta(NodeCopier nodeCopier){
+    return nodeCopier.copy(this);
   }
 
-  public List<String> getBoundVars(){
-    return boundVars;
+  public String get_value(){
+    return "[lambda closure: "+ bound_var_list.get(0)+": "+ element +"]";
+  }
+
+  public List<String> getBound_var_list(){
+    return bound_var_list;
   }
   
-  public void addBoundVars(String boundVar){
-    boundVars.add(boundVar);
+  public void addBound_var_list(String boundVar){
+    bound_var_list.add(boundVar);
   }
   
-  public void setBoundVars(List<String> boundVars){
-    this.boundVars = boundVars;
+  public void setBound_var_list(List<String> bound_var_list){
+    this.bound_var_list = bound_var_list;
   }
   
   public Stack<ASTNode> getBody(){
@@ -52,19 +47,19 @@ public class Delta extends ASTNode{
     this.body = body;
   }
   
-  public int getIndex(){
-    return index;
+  public int getElement(){
+    return element;
   }
 
-  public void setIndex(int index){
-    this.index = index;
+  public void setElement(int element){
+    this.element = element;
   }
 
-  public Environment getLinkedEnv(){
-    return linkedEnv;
+  public Environment getLinked_Environment(){
+    return linked_Environment;
   }
 
-  public void setLinkedEnv(Environment linkedEnv){
-    this.linkedEnv = linkedEnv;
+  public void setLinked_Environment(Environment linked_Environment){
+    this.linked_Environment = linked_Environment;
   }
 }

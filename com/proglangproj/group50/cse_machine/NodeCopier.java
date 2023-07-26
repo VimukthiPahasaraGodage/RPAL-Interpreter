@@ -6,15 +6,8 @@ import java.util.Stack;
 
 import com.proglangproj.group50.abstractsyntaxtree.ASTNode;
 
-/**
- * Class to make copies of nodes on value stack. Used to pass back copies of
- * environment bindings so that later uses of those bindings are not affected
- * by any changes made in any earlier deltas.
- * 
- * <p>Uses the Visitor pattern to avoid instanceOf code smell.
- * 
- * @author Raj
- */
+// Class to make copies of nodes on value stack
+
 public class NodeCopier{
   
   public ASTNode copy(ASTNode astNode){
@@ -37,19 +30,19 @@ public class NodeCopier{
       copy.setSibling(beta.getSibling().Accept(this));
     copy.setType(beta.getType());
     copy.setVal(beta.getVal());
-    copy.setSource_Line_Num(beta.getSource_Line_Num());
+    copy.setSource_Line_Num(beta.getSource_Line_Num ());
     
-    Stack<ASTNode> thenBodyCopy = new Stack<ASTNode>();
-    for(ASTNode thenBodyElement: beta.getThenBody()){
-      thenBodyCopy.add(thenBodyElement.Accept(this));
+    Stack<ASTNode> thenNodeCopy = new Stack<ASTNode>();
+    for(ASTNode thenBodyElement: beta.getThenNode()){
+      thenNodeCopy.add(thenBodyElement.Accept(this));
     }
-    copy.setThenBody(thenBodyCopy);
+    copy.setThenNode(thenNodeCopy);
     
-    Stack<ASTNode> elseBodyCopy = new Stack<ASTNode>();
-    for(ASTNode elseBodyElement: beta.getElseBody()){
-      elseBodyCopy.add(elseBodyElement.Accept(this));
+    Stack<ASTNode> elseNodeCopy = new Stack<ASTNode>();
+    for(ASTNode elseBodyElement: beta.getElseNode()){
+      elseNodeCopy.add(elseBodyElement.Accept(this));
     }
-    copy.setElseBody(elseBodyCopy);
+    copy.setElseNode(elseNodeCopy);
     
     return copy;
   }
@@ -61,10 +54,10 @@ public class NodeCopier{
     if(eta.getSibling()!=null)
       copy.setSibling(eta.getSibling().Accept(this));
     copy.setType(eta.getType());
-    copy.setVal(eta.getVal());
+    copy.setVal(eta.get_value());
     copy.setSource_Line_Num(eta.getSource_Line_Num());
     
-    copy.setDelta(eta.getDelta().Accept(this));
+    copy.setDelta(eta.getDelta().accept_Delta(this));
     
     return copy;
   }
@@ -76,8 +69,8 @@ public class NodeCopier{
     if(delta.getSibling()!=null)
       copy.setSibling(delta.getSibling().Accept(this));
     copy.setType(delta.getType());
-    copy.setVal(delta.getVal());
-    copy.setIndex(delta.getIndex());
+    copy.setVal(delta.get_value());
+    copy.setElement(delta.getElement());
     copy.setSource_Line_Num(delta.getSource_Line_Num());
     
     Stack<ASTNode> bodyCopy = new Stack<ASTNode>();
@@ -87,10 +80,10 @@ public class NodeCopier{
     copy.setBody(bodyCopy);
     
     List<String> boundVarsCopy = new ArrayList<String>();
-    boundVarsCopy.addAll(delta.getBoundVars());
-    copy.setBoundVars(boundVarsCopy);
+    boundVarsCopy.addAll(delta.getBound_var_list());
+    copy.setBound_var_list(boundVarsCopy);
     
-    copy.setLinkedEnv(delta.getLinkedEnv());
+    copy.setLinked_Environment(delta.getLinked_Environment());
     
     return copy;
   }
@@ -102,7 +95,7 @@ public class NodeCopier{
     if(tuple.getSibling()!=null)
       copy.setSibling(tuple.getSibling().Accept(this));
     copy.setType(tuple.getType());
-    copy.setVal(tuple.getVal());
+    copy.setVal(tuple.get_value());
     copy.setSource_Line_Num(tuple.getSource_Line_Num());
     return copy;
   }

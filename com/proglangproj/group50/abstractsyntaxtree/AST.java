@@ -291,7 +291,7 @@ public class AST{
     
     Delta delta_1 = new Delta();
     delta_1.setBody(Pend_Delta.body);
-    delta_1.setIndex(Delta_Index++);
+    delta_1.setElement(Delta_Index++);
     Cur_Delta = delta_1;
     
     if(Start_Body_Node == root)
@@ -314,12 +314,12 @@ public class AST{
         ASTNode commaNode = node.getChild();
         ASTNode Child_Node = commaNode.getChild();
         while(Child_Node != null){
-          delta_temp.addBoundVars(Child_Node.getVal());
+          delta_temp.addBound_var_list(Child_Node.getVal());
           Child_Node = Child_Node.getSibling();
         }
       }
       else {
-        delta_temp.addBoundVars(node.getChild().getVal());
+        delta_temp.addBound_var_list(node.getChild().getVal());
       }
       body.push(delta_temp); //add this new delta to the existing delta's body
       return;
@@ -334,8 +334,8 @@ public class AST{
       //Add a Beta node.
       Beta Beta_Node = new Beta();
       
-      Build_Delta_Body(Then_Node, Beta_Node.getThenBody());
-      Build_Delta_Body(Else_Node, Beta_Node.getElseBody());
+      Build_Delta_Body(Then_Node, Beta_Node.getThenNode());
+      Build_Delta_Body(Else_Node, Beta_Node.getElseNode());
       
       body.push(Beta_Node);
       

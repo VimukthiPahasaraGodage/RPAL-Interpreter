@@ -54,8 +54,8 @@ public class rpal20 {
 
     private static String evaluateST(AST ast){
         CSEMachine cseMachine = new CSEMachine(ast);
-        cseMachine.evaluateProgram();
-        return cseMachine.evaluationResult;
+        cseMachine.evaluate_Program();
+        return cseMachine.evaluation_result;
     }
 
     private static void saveOutput(String outputFileName, String evaluationResult){

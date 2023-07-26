@@ -8,9 +8,8 @@ public class Tuple extends ASTNode{
   public Tuple(){
     setType(ASTNodeType.TUPLE);
   }
-  
-  @Override
-  public String getVal(){
+
+  public String get_value(){
     ASTNode childNode = getChild();
     if(childNode==null)
       return "nil";
@@ -24,8 +23,8 @@ public class Tuple extends ASTNode{
     return printValue;
   }
   
-  public Tuple Accept(NodeCopier Node_Copier){
-    return Node_Copier.copy(this);
+  public Tuple accept_Delta(NodeCopier nodeCopier){
+    return nodeCopier.copy(this);
   }
   
 }
