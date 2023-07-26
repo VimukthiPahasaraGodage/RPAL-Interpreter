@@ -10,7 +10,6 @@ import com.proglangproj.group50.abstractsyntaxtree.ASTNodeType;
  * hence will not lead to our evaluating the fixed point again (what happens when
  * we replace YF with F (YF) i.e., Eta with Delta Eta)). If the source code creates
  * an infinite recursion, none of these tricks will save us.
- * @author Raj
  */
 public class Eta extends ASTNode{
   private Delta delta;

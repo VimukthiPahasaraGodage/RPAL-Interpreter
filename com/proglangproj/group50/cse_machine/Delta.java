@@ -9,7 +9,6 @@ import com.proglangproj.group50.abstractsyntaxtree.ASTNodeType;
 
 /**
  * Represents a lambda closure.
- * @author Raj
  */
 public class Delta extends ASTNode{
   private List<String> boundVars;

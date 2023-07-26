@@ -18,7 +18,6 @@ CLASSES = \
         com/proglangproj/group50/cse_machine/Delta.java \
         com/proglangproj/group50/cse_machine/Environment.java \
         com/proglangproj/group50/cse_machine/Eta.java \
-        com/proglangproj/group50/cse_machine/EvaluationError.java \
         com/proglangproj/group50/cse_machine/NodeCopier.java \
         com/proglangproj/group50/cse_machine/Tuple.java \
         com/proglangproj/group50/lexicalanalyzer/Scanner.java \
