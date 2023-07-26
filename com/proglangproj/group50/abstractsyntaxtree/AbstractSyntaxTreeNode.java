@@ -2,34 +2,34 @@ package com.proglangproj.group50.abstractsyntaxtree;
 
 import com.proglangproj.group50.cse_machine.NodeCopier;
 
-public class ASTNode {
-    private ASTNodeType typeOfASTNode;
+public class AbstractSyntaxTreeNode {
+    private AbstractSyntaxTreeNodeType typeOfASTNode;
     private String valueOfASTNode;
-    private ASTNode childOfASTNode;
-    private ASTNode siblingOfASTNode;
+    private AbstractSyntaxTreeNode childOfASTNode;
+    private AbstractSyntaxTreeNode siblingOfASTNode;
     private int lineNumberOfSourceFile;
 
-    public ASTNodeType getTypeOfASTNode() {
+    public AbstractSyntaxTreeNodeType getTypeOfASTNode() {
         return typeOfASTNode;
     }
 
-    public void setTypeOfASTNode(ASTNodeType typeOfASTNode) {
+    public void setTypeOfASTNode(AbstractSyntaxTreeNodeType typeOfASTNode) {
         this.typeOfASTNode = typeOfASTNode;
     }
 
-    public ASTNode getChildOfASTNode() {
+    public AbstractSyntaxTreeNode getChildOfASTNode() {
         return childOfASTNode;
     }
 
-    public void setChildOfASTNode(ASTNode childOfASTNode) {
+    public void setChildOfASTNode(AbstractSyntaxTreeNode childOfASTNode) {
         this.childOfASTNode = childOfASTNode;
     }
 
-    public ASTNode getSiblingOfASTNode() {
+    public AbstractSyntaxTreeNode getSiblingOfASTNode() {
         return siblingOfASTNode;
     }
 
-    public void setSiblingOfASTNode(ASTNode siblingOfASTNode) {
+    public void setSiblingOfASTNode(AbstractSyntaxTreeNode siblingOfASTNode) {
         this.siblingOfASTNode = siblingOfASTNode;
     }
 
@@ -41,7 +41,7 @@ public class ASTNode {
         this.valueOfASTNode = valueOfASTNode;
     }
 
-    public ASTNode acceptASTNode(NodeCopier nodeCopier) {
+    public AbstractSyntaxTreeNode acceptASTNode(NodeCopier nodeCopier) {
         return nodeCopier.copy(this);
     }
 

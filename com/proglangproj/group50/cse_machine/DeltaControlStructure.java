@@ -4,24 +4,24 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
-import com.proglangproj.group50.abstractsyntaxtree.ASTNode;
-import com.proglangproj.group50.abstractsyntaxtree.ASTNodeType;
+import com.proglangproj.group50.abstractsyntaxtree.AbstractSyntaxTreeNode;
+import com.proglangproj.group50.abstractsyntaxtree.AbstractSyntaxTreeNodeType;
 
 /**
  * Represents a lambda closure.
  */
-public class Delta extends ASTNode{
+public class DeltaControlStructure extends AbstractSyntaxTreeNode {
   private List<String> boundVars;
-  private Environment linkedEnv; //environment in effect when this Delta was pushed on to the value stack
-  private Stack<ASTNode> body;
+  private Environment linkedEnv; //environment in effect when this DeltaControlStructure was pushed on to the value stack
+  private Stack<AbstractSyntaxTreeNode> body;
   private int index;
   
-  public Delta(){
-    setTypeOfASTNode(ASTNodeType.DELTA);
+  public DeltaControlStructure(){
+    setTypeOfASTNode(AbstractSyntaxTreeNodeType.DELTA);
     boundVars = new ArrayList<String>();
   }
   
-  public Delta acceptASTNode(NodeCopier nodeCopier){
+  public DeltaControlStructure acceptASTNode(NodeCopier nodeCopier){
     return nodeCopier.copy(this);
   }
   
@@ -43,11 +43,11 @@ public class Delta extends ASTNode{
     this.boundVars = boundVars;
   }
   
-  public Stack<ASTNode> getBody(){
+  public Stack<AbstractSyntaxTreeNode> getBody(){
     return body;
   }
   
-  public void setBody(Stack<ASTNode> body){
+  public void setBody(Stack<AbstractSyntaxTreeNode> body){
     this.body = body;
   }
   

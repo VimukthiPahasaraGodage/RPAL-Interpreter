@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
-import com.proglangproj.group50.abstractsyntaxtree.ASTNode;
+import com.proglangproj.group50.abstractsyntaxtree.AbstractSyntaxTreeNode;
 
 /**
  * Class to make copies of nodes on value stack. Used to pass back copies of
@@ -13,8 +13,8 @@ import com.proglangproj.group50.abstractsyntaxtree.ASTNode;
  */
 public class NodeCopier{
   
-  public ASTNode copy(ASTNode astNode){
-    ASTNode copy = new ASTNode();
+  public AbstractSyntaxTreeNode copy(AbstractSyntaxTreeNode astNode){
+    AbstractSyntaxTreeNode copy = new AbstractSyntaxTreeNode();
     if(astNode.getChildOfASTNode()!=null)
       copy.setChildOfASTNode(astNode.getChildOfASTNode().acceptASTNode(this));
     if(astNode.getSiblingOfASTNode()!=null)
@@ -25,8 +25,8 @@ public class NodeCopier{
     return copy;
   }
   
-  public Beta copy(Beta beta){
-    Beta copy = new Beta();
+  public BetaConditionalEvaluation copy(BetaConditionalEvaluation beta){
+    BetaConditionalEvaluation copy = new BetaConditionalEvaluation();
     if(beta.getChildOfASTNode()!=null)
       copy.setChildOfASTNode(beta.getChildOfASTNode().acceptASTNode(this));
     if(beta.getSiblingOfASTNode()!=null)
@@ -35,14 +35,14 @@ public class NodeCopier{
     copy.setValueOfASTNode(beta.getValueOfASTNode());
     copy.setLineNumberOfSourceFile(beta.getLineNumberOfSourceFile());
     
-    Stack<ASTNode> thenBodyCopy = new Stack<ASTNode>();
-    for(ASTNode thenBodyElement: beta.getThenBody()){
+    Stack<AbstractSyntaxTreeNode> thenBodyCopy = new Stack<AbstractSyntaxTreeNode>();
+    for(AbstractSyntaxTreeNode thenBodyElement: beta.getThenBody()){
       thenBodyCopy.add(thenBodyElement.acceptASTNode(this));
     }
     copy.setThenBody(thenBodyCopy);
     
-    Stack<ASTNode> elseBodyCopy = new Stack<ASTNode>();
-    for(ASTNode elseBodyElement: beta.getElseBody()){
+    Stack<AbstractSyntaxTreeNode> elseBodyCopy = new Stack<AbstractSyntaxTreeNode>();
+    for(AbstractSyntaxTreeNode elseBodyElement: beta.getElseBody()){
       elseBodyCopy.add(elseBodyElement.acceptASTNode(this));
     }
     copy.setElseBody(elseBodyCopy);
@@ -50,8 +50,8 @@ public class NodeCopier{
     return copy;
   }
   
-  public Eta copy(Eta eta){
-    Eta copy = new Eta();
+  public EtaRecursiveFixedPoint copy(EtaRecursiveFixedPoint eta){
+    EtaRecursiveFixedPoint copy = new EtaRecursiveFixedPoint();
     if(eta.getChildOfASTNode()!=null)
       copy.setChildOfASTNode(eta.getChildOfASTNode().acceptASTNode(this));
     if(eta.getSiblingOfASTNode()!=null)
@@ -65,8 +65,8 @@ public class NodeCopier{
     return copy;
   }
   
-  public Delta copy(Delta delta){
-    Delta copy = new Delta();
+  public DeltaControlStructure copy(DeltaControlStructure delta){
+    DeltaControlStructure copy = new DeltaControlStructure();
     if(delta.getChildOfASTNode()!=null)
       copy.setChildOfASTNode(delta.getChildOfASTNode().acceptASTNode(this));
     if(delta.getSiblingOfASTNode()!=null)
@@ -76,8 +76,8 @@ public class NodeCopier{
     copy.setIndex(delta.getIndex());
     copy.setLineNumberOfSourceFile(delta.getLineNumberOfSourceFile());
     
-    Stack<ASTNode> bodyCopy = new Stack<ASTNode>();
-    for(ASTNode bodyElement: delta.getBody()){
+    Stack<AbstractSyntaxTreeNode> bodyCopy = new Stack<AbstractSyntaxTreeNode>();
+    for(AbstractSyntaxTreeNode bodyElement: delta.getBody()){
       bodyCopy.add(bodyElement.acceptASTNode(this));
     }
     copy.setBody(bodyCopy);

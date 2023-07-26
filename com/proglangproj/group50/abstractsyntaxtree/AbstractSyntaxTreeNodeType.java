@@ -1,6 +1,6 @@
 package com.proglangproj.group50.abstractsyntaxtree;
 
-public enum ASTNodeType {
+public enum AbstractSyntaxTreeNodeType {
     /**
      * Expressions
      */
@@ -83,9 +83,9 @@ public enum ASTNodeType {
     ETA(""),
     TUPLE("");
 
-    private final String printNameOfASTNode; //used for printing AST representation
+    private final String printNameOfASTNode; //used for printing AbstractSyntaxTree representation
 
-    ASTNodeType(String name) {
+    AbstractSyntaxTreeNodeType(String name) {
         printNameOfASTNode = name;
     }
 

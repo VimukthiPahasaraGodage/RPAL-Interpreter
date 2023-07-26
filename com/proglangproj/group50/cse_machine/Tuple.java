@@ -1,17 +1,17 @@
 package com.proglangproj.group50.cse_machine;
 
-import com.proglangproj.group50.abstractsyntaxtree.ASTNode;
-import com.proglangproj.group50.abstractsyntaxtree.ASTNodeType;
+import com.proglangproj.group50.abstractsyntaxtree.AbstractSyntaxTreeNode;
+import com.proglangproj.group50.abstractsyntaxtree.AbstractSyntaxTreeNodeType;
 
-public class Tuple extends ASTNode{
+public class Tuple extends AbstractSyntaxTreeNode {
   
   public Tuple(){
-    setTypeOfASTNode(ASTNodeType.TUPLE);
+    setTypeOfASTNode(AbstractSyntaxTreeNodeType.TUPLE);
   }
   
   @Override
   public String getValueOfASTNode(){
-    ASTNode childNode = getChildOfASTNode();
+    AbstractSyntaxTreeNode childNode = getChildOfASTNode();
     if(childNode==null)
       return "nil";
     

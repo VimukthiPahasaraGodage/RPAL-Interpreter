@@ -3,14 +3,14 @@ package com.proglangproj.group50.cse_machine;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.proglangproj.group50.abstractsyntaxtree.ASTNode;
+import com.proglangproj.group50.abstractsyntaxtree.AbstractSyntaxTreeNode;
 
 public class Environment{
   private Environment parent;
-  private Map<String, ASTNode> nameValueMap;
+  private Map<String, AbstractSyntaxTreeNode> nameValueMap;
   
   public Environment(){
-    nameValueMap = new HashMap<String, ASTNode>();
+    nameValueMap = new HashMap<String, AbstractSyntaxTreeNode>();
   }
 
   public Environment getParent(){
@@ -26,12 +26,12 @@ public class Environment{
    * inheritance hierarchy, starting with the Environment this method is invoked on.
    * 
    * @param key key the mapping of which to find
-   * @return ASTNode that corresponds to the mapping of the key passed in as an argument
+   * @return AbstractSyntaxTreeNode that corresponds to the mapping of the key passed in as an argument
    *         or null if no mapping was found
    */
-  public ASTNode lookup(String key){
-    ASTNode retValue = null;
-    Map<String, ASTNode> map = nameValueMap;
+  public AbstractSyntaxTreeNode lookup(String key){
+    AbstractSyntaxTreeNode retValue = null;
+    Map<String, AbstractSyntaxTreeNode> map = nameValueMap;
     
     retValue = map.get(key);
     
@@ -44,7 +44,7 @@ public class Environment{
       return null;
   }
   
-  public void addMapping(String key, ASTNode value){
+  public void addMapping(String key, AbstractSyntaxTreeNode value){
     nameValueMap.put(key, value);
   }
 }

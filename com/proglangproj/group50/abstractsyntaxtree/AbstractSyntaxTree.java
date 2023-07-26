@@ -1,7 +1,7 @@
 package com.proglangproj.group50.abstractsyntaxtree;
 
-import com.proglangproj.group50.cse_machine.Beta;
-import com.proglangproj.group50.cse_machine.Delta;
+import com.proglangproj.group50.cse_machine.BetaConditionalEvaluation;
+import com.proglangproj.group50.cse_machine.DeltaControlStructure;
 
 import java.util.ArrayDeque;
 import java.util.Stack;
@@ -9,15 +9,15 @@ import java.util.Stack;
 /*
  * Abstract Syntax Tree: The nodes use a first-child
  */
-public class AST {
-    private final ASTNode root;
+public class AbstractSyntaxTree {
+    private final AbstractSyntaxTreeNode root;
     private ArrayDeque<PendingDeltaBody> pending_Delta_Body_Queue;
     private boolean Standardized;
-    private Delta Cur_Delta;
-    private Delta Root_Delta;
+    private DeltaControlStructure Cur_Delta;
+    private DeltaControlStructure Root_Delta;
     private int Delta_Index;
 
-    public AST(ASTNode node) {
+    public AbstractSyntaxTree(AbstractSyntaxTreeNode node) {
         this.root = node;
     }
 
@@ -28,7 +28,7 @@ public class AST {
         Print_In_Preorder(root, "");
     }
 
-    private void Print_In_Preorder(ASTNode node, String Print_Prefix) {
+    private void Print_In_Preorder(AbstractSyntaxTreeNode node, String Print_Prefix) {
         if (node == null) {
             return;
         }
@@ -38,11 +38,11 @@ public class AST {
         Print_In_Preorder(node.getSiblingOfASTNode(), Print_Prefix);
     }
 
-    private void Print_ASTNode_Details(ASTNode node, String Print_Prefix) {
-        if (node.getTypeOfASTNode() == ASTNodeType.IDENTIFIER ||
-                node.getTypeOfASTNode() == ASTNodeType.INTEGER) {
+    private void Print_ASTNode_Details(AbstractSyntaxTreeNode node, String Print_Prefix) {
+        if (node.getTypeOfASTNode() == AbstractSyntaxTreeNodeType.IDENTIFIER ||
+                node.getTypeOfASTNode() == AbstractSyntaxTreeNodeType.INTEGER) {
             System.out.printf(Print_Prefix + node.getTypeOfASTNode().getPrintNameOfASTNode() + "\n", node.getValueOfASTNode());
-        } else if (node.getTypeOfASTNode() == ASTNodeType.STRING)
+        } else if (node.getTypeOfASTNode() == AbstractSyntaxTreeNodeType.STRING)
             System.out.printf(Print_Prefix + node.getTypeOfASTNode().getPrintNameOfASTNode() + "\n", node.getValueOfASTNode());
         else {
             System.out.println(Print_Prefix + node.getTypeOfASTNode().getPrintNameOfASTNode());
@@ -50,7 +50,7 @@ public class AST {
     }
 
     /**
-     * Standardize the AST
+     * Standardize the AbstractSyntaxTree
      */
     public void Standardize() {
         Standardize(root);
@@ -62,10 +62,10 @@ public class AST {
      *
      * @param node node to standardize
      */
-    private void Standardize(ASTNode node) {
+    private void Standardize(AbstractSyntaxTreeNode node) {
         //standardize children first
         if (node.getChildOfASTNode() != null) {
-            ASTNode Node_Child = node.getChildOfASTNode();
+            AbstractSyntaxTreeNode Node_Child = node.getChildOfASTNode();
             while (Node_Child != null) {
                 Standardize(Node_Child);
                 Node_Child = Node_Child.getSiblingOfASTNode();
@@ -80,14 +80,14 @@ public class AST {
                 //    EQUAL   P   ->   LAMBDA   E
                 //   /   \             /    \
                 //  X     E           X      P
-                ASTNode equalNode = node.getChildOfASTNode();
-                if (equalNode.getTypeOfASTNode() != ASTNodeType.EQUAL)
+                AbstractSyntaxTreeNode equalNode = node.getChildOfASTNode();
+                if (equalNode.getTypeOfASTNode() != AbstractSyntaxTreeNodeType.EQUAL)
                     throw new RuntimeException("LET/WHERE: left child is not EQUAL"); //for safety
-                ASTNode Node_1 = equalNode.getChildOfASTNode().getSiblingOfASTNode();
+                AbstractSyntaxTreeNode Node_1 = equalNode.getChildOfASTNode().getSiblingOfASTNode();
                 equalNode.getChildOfASTNode().setSiblingOfASTNode(equalNode.getSiblingOfASTNode());
                 equalNode.setSiblingOfASTNode(Node_1);
-                equalNode.setTypeOfASTNode(ASTNodeType.LAMBDA);
-                node.setTypeOfASTNode(ASTNodeType.GAMMA);
+                equalNode.setTypeOfASTNode(AbstractSyntaxTreeNodeType.LAMBDA);
+                node.setTypeOfASTNode(AbstractSyntaxTreeNodeType.GAMMA);
                 break;
             case WHERE:
                 //where will be made as LET node and standardize that
@@ -100,7 +100,7 @@ public class AST {
                 node.getChildOfASTNode().setSiblingOfASTNode(null);
                 equalNode.setSiblingOfASTNode(node.getChildOfASTNode());
                 node.setChildOfASTNode(equalNode);
-                node.setTypeOfASTNode(ASTNodeType.LET);
+                node.setTypeOfASTNode(AbstractSyntaxTreeNodeType.LET);
                 Standardize(node);
                 break;
             case FCNFORM:
@@ -109,9 +109,9 @@ public class AST {
                 //      P    V+   E    ->      P     +LAMBDA
                 //                                    /     \
                 //                                    V     .E
-                ASTNode childSibling = node.getChildOfASTNode().getSiblingOfASTNode();
+                AbstractSyntaxTreeNode childSibling = node.getChildOfASTNode().getSiblingOfASTNode();
                 node.getChildOfASTNode().setSiblingOfASTNode(constructLambdaChain(childSibling));
-                node.setTypeOfASTNode(ASTNodeType.EQUAL);
+                node.setTypeOfASTNode(AbstractSyntaxTreeNodeType.EQUAL);
                 break;
             case AT:
                 //         AT              GAMMA
@@ -119,17 +119,17 @@ public class AST {
                 //      E1 N E2          GAMMA   E2
                 //                       /    \
                 //                      N     E1
-                ASTNode Node1 = node.getChildOfASTNode();
-                ASTNode Node_2 = Node1.getSiblingOfASTNode();
-                ASTNode Node_3 = Node_2.getSiblingOfASTNode();
-                ASTNode gammaNode = new ASTNode();
-                gammaNode.setTypeOfASTNode(ASTNodeType.GAMMA);
+                AbstractSyntaxTreeNode Node1 = node.getChildOfASTNode();
+                AbstractSyntaxTreeNode Node_2 = Node1.getSiblingOfASTNode();
+                AbstractSyntaxTreeNode Node_3 = Node_2.getSiblingOfASTNode();
+                AbstractSyntaxTreeNode gammaNode = new AbstractSyntaxTreeNode();
+                gammaNode.setTypeOfASTNode(AbstractSyntaxTreeNodeType.GAMMA);
                 gammaNode.setChildOfASTNode(Node_2);
                 Node_2.setSiblingOfASTNode(Node1);
                 Node1.setSiblingOfASTNode(null);
                 gammaNode.setSiblingOfASTNode(Node_3);
                 node.setChildOfASTNode(gammaNode);
-                node.setTypeOfASTNode(ASTNodeType.GAMMA);
+                node.setTypeOfASTNode(AbstractSyntaxTreeNodeType.GAMMA);
                 break;
             case WITHIN:
                 //           WITHIN                  EQUAL
@@ -139,24 +139,24 @@ public class AST {
                 //      X1    E1 X2    E2               LAMBDA  E1
                 //                                      /    \
                 //                                     X1    E2
-                if (node.getChildOfASTNode().getTypeOfASTNode() != ASTNodeType.EQUAL || node.getChildOfASTNode().getSiblingOfASTNode().getTypeOfASTNode() != ASTNodeType.EQUAL) {
+                if (node.getChildOfASTNode().getTypeOfASTNode() != AbstractSyntaxTreeNodeType.EQUAL || node.getChildOfASTNode().getSiblingOfASTNode().getTypeOfASTNode() != AbstractSyntaxTreeNodeType.EQUAL) {
                     throw new RuntimeException("WITHIN: one of the children is not EQUAL"); //for safety
                 }
-                ASTNode Node_4 = node.getChildOfASTNode().getChildOfASTNode();
+                AbstractSyntaxTreeNode Node_4 = node.getChildOfASTNode().getChildOfASTNode();
                 Node1 = Node_4.getSiblingOfASTNode();
-                ASTNode Node_5 = node.getChildOfASTNode().getSiblingOfASTNode().getChildOfASTNode();
+                AbstractSyntaxTreeNode Node_5 = node.getChildOfASTNode().getSiblingOfASTNode().getChildOfASTNode();
                 Node_3 = Node_5.getSiblingOfASTNode();
-                ASTNode lambdaNode = new ASTNode();
-                lambdaNode.setTypeOfASTNode(ASTNodeType.LAMBDA);
+                AbstractSyntaxTreeNode lambdaNode = new AbstractSyntaxTreeNode();
+                lambdaNode.setTypeOfASTNode(AbstractSyntaxTreeNodeType.LAMBDA);
                 Node_4.setSiblingOfASTNode(Node_3);
                 lambdaNode.setChildOfASTNode(Node_4);
                 lambdaNode.setSiblingOfASTNode(Node1);
-                gammaNode = new ASTNode();
-                gammaNode.setTypeOfASTNode(ASTNodeType.GAMMA);
+                gammaNode = new AbstractSyntaxTreeNode();
+                gammaNode.setTypeOfASTNode(AbstractSyntaxTreeNodeType.GAMMA);
                 gammaNode.setChildOfASTNode(lambdaNode);
                 Node_5.setSiblingOfASTNode(gammaNode);
                 node.setChildOfASTNode(Node_5);
-                node.setTypeOfASTNode(ASTNodeType.EQUAL);
+                node.setTypeOfASTNode(AbstractSyntaxTreeNodeType.EQUAL);
                 break;
             case SIMULTDEF:
                 //         SIMULTDEF            EQUAL
@@ -164,18 +164,18 @@ public class AST {
                 //           EQUAL++  ->     COMMA   TAU
                 //           /   \             |      |
                 //          X     E           X++    E++
-                ASTNode commaNode = new ASTNode();
-                commaNode.setTypeOfASTNode(ASTNodeType.COMMA);
-                ASTNode tauNode = new ASTNode();
-                tauNode.setTypeOfASTNode(ASTNodeType.TAU);
-                ASTNode childNode = node.getChildOfASTNode();
+                AbstractSyntaxTreeNode commaNode = new AbstractSyntaxTreeNode();
+                commaNode.setTypeOfASTNode(AbstractSyntaxTreeNodeType.COMMA);
+                AbstractSyntaxTreeNode tauNode = new AbstractSyntaxTreeNode();
+                tauNode.setTypeOfASTNode(AbstractSyntaxTreeNodeType.TAU);
+                AbstractSyntaxTreeNode childNode = node.getChildOfASTNode();
                 while (childNode != null) {
                     populateCommaAndTauNode(childNode, commaNode, tauNode);
                     childNode = childNode.getSiblingOfASTNode();
                 }
                 commaNode.setSiblingOfASTNode(tauNode);
                 node.setChildOfASTNode(commaNode);
-                node.setTypeOfASTNode(ASTNodeType.EQUAL);
+                node.setTypeOfASTNode(AbstractSyntaxTreeNodeType.EQUAL);
                 break;
             case REC:
                 //        REC                 EQUAL
@@ -186,25 +186,25 @@ public class AST {
                 //                                     /     \
                 //                                    X       E
                 childNode = node.getChildOfASTNode();
-                if (childNode.getTypeOfASTNode() != ASTNodeType.EQUAL)
+                if (childNode.getTypeOfASTNode() != AbstractSyntaxTreeNodeType.EQUAL)
                     throw new RuntimeException("REC: child is not EQUAL"); //safety
-                ASTNode x = childNode.getChildOfASTNode();
-                lambdaNode = new ASTNode();
-                lambdaNode.setTypeOfASTNode(ASTNodeType.LAMBDA);
+                AbstractSyntaxTreeNode x = childNode.getChildOfASTNode();
+                lambdaNode = new AbstractSyntaxTreeNode();
+                lambdaNode.setTypeOfASTNode(AbstractSyntaxTreeNodeType.LAMBDA);
                 lambdaNode.setChildOfASTNode(x); //x is already attached to e
-                ASTNode yStarNode = new ASTNode();
-                yStarNode.setTypeOfASTNode(ASTNodeType.YSTAR);
+                AbstractSyntaxTreeNode yStarNode = new AbstractSyntaxTreeNode();
+                yStarNode.setTypeOfASTNode(AbstractSyntaxTreeNodeType.YSTAR);
                 yStarNode.setSiblingOfASTNode(lambdaNode);
-                gammaNode = new ASTNode();
-                gammaNode.setTypeOfASTNode(ASTNodeType.GAMMA);
+                gammaNode = new AbstractSyntaxTreeNode();
+                gammaNode.setTypeOfASTNode(AbstractSyntaxTreeNodeType.GAMMA);
                 gammaNode.setChildOfASTNode(yStarNode);
-                ASTNode xWithSiblingGamma = new ASTNode(); //same as x except the sibling is not e but gamma
+                AbstractSyntaxTreeNode xWithSiblingGamma = new AbstractSyntaxTreeNode(); //same as x except the sibling is not e but gamma
                 xWithSiblingGamma.setChildOfASTNode(x.getChildOfASTNode());
                 xWithSiblingGamma.setSiblingOfASTNode(gammaNode);
                 xWithSiblingGamma.setTypeOfASTNode(x.getTypeOfASTNode());
                 xWithSiblingGamma.setValueOfASTNode(x.getValueOfASTNode());
                 node.setChildOfASTNode(xWithSiblingGamma);
-                node.setTypeOfASTNode(ASTNodeType.EQUAL);
+                node.setTypeOfASTNode(AbstractSyntaxTreeNodeType.EQUAL);
                 break;
             case LAMBDA:
                 //     LAMBDA        LAMBDA
@@ -242,11 +242,11 @@ public class AST {
         }
     }
 
-    private void populateCommaAndTauNode(ASTNode equalNode, ASTNode commaNode, ASTNode tauNode) {
-        if (equalNode.getTypeOfASTNode() != ASTNodeType.EQUAL)
+    private void populateCommaAndTauNode(AbstractSyntaxTreeNode equalNode, AbstractSyntaxTreeNode commaNode, AbstractSyntaxTreeNode tauNode) {
+        if (equalNode.getTypeOfASTNode() != AbstractSyntaxTreeNodeType.EQUAL)
             throw new RuntimeException("SIMULTDEF: one of the children is not EQUAL"); //safety
-        ASTNode x = equalNode.getChildOfASTNode();
-        ASTNode e = x.getSiblingOfASTNode();
+        AbstractSyntaxTreeNode x = equalNode.getChildOfASTNode();
+        AbstractSyntaxTreeNode e = x.getSiblingOfASTNode();
         setChild(commaNode, x);
         setChild(tauNode, e);
     }
@@ -258,11 +258,11 @@ public class AST {
      * @param parentNode
      * @param childNode
      */
-    private void setChild(ASTNode parentNode, ASTNode childNode) {
+    private void setChild(AbstractSyntaxTreeNode parentNode, AbstractSyntaxTreeNode childNode) {
         if (parentNode.getChildOfASTNode() == null)
             parentNode.setChildOfASTNode(childNode);
         else {
-            ASTNode lastSibling = parentNode.getChildOfASTNode();
+            AbstractSyntaxTreeNode lastSibling = parentNode.getChildOfASTNode();
             while (lastSibling.getSiblingOfASTNode() != null)
                 lastSibling = lastSibling.getSiblingOfASTNode();
             lastSibling.setSiblingOfASTNode(childNode);
@@ -270,12 +270,12 @@ public class AST {
         childNode.setSiblingOfASTNode(null);
     }
 
-    private ASTNode constructLambdaChain(ASTNode node) {
+    private AbstractSyntaxTreeNode constructLambdaChain(AbstractSyntaxTreeNode node) {
         if (node.getSiblingOfASTNode() == null)
             return node;
 
-        ASTNode lambdaNode = new ASTNode();
-        lambdaNode.setTypeOfASTNode(ASTNodeType.LAMBDA);
+        AbstractSyntaxTreeNode lambdaNode = new AbstractSyntaxTreeNode();
+        lambdaNode.setTypeOfASTNode(AbstractSyntaxTreeNodeType.LAMBDA);
         lambdaNode.setChildOfASTNode(node);
         if (node.getSiblingOfASTNode().getSiblingOfASTNode() != null)
             node.setSiblingOfASTNode(constructLambdaChain(node.getSiblingOfASTNode()));
@@ -287,7 +287,7 @@ public class AST {
      *
      * @return the first delta structure (&delta;0)
      */
-    public Delta createDeltas() {
+    public DeltaControlStructure createDeltas() {
         pending_Delta_Body_Queue = new ArrayDeque<PendingDeltaBody>();
         Delta_Index = 0;
         Cur_Delta = createDelta(root);
@@ -295,14 +295,14 @@ public class AST {
         return Root_Delta;
     }
 
-    private Delta createDelta(ASTNode startBodyNode) {
+    private DeltaControlStructure createDelta(AbstractSyntaxTreeNode startBodyNode) {
         //we'll create this delta's body later
         PendingDeltaBody pendingDelta = new PendingDeltaBody();
         pendingDelta.startNode = startBodyNode;
-        pendingDelta.body = new Stack<ASTNode>();
+        pendingDelta.body = new Stack<AbstractSyntaxTreeNode>();
         pending_Delta_Body_Queue.add(pendingDelta);
 
-        Delta d = new Delta();
+        DeltaControlStructure d = new DeltaControlStructure();
         d.setBody(pendingDelta.body);
         d.setIndex(Delta_Index++);
         Cur_Delta = d;
@@ -320,12 +320,12 @@ public class AST {
         }
     }
 
-    private void buildDeltaBody(ASTNode node, Stack<ASTNode> body) {
-        if (node.getTypeOfASTNode() == ASTNodeType.LAMBDA) { //create a new delta
-            Delta d = createDelta(node.getChildOfASTNode().getSiblingOfASTNode()); //the new delta's body starts at the right child of the lambda
-            if (node.getChildOfASTNode().getTypeOfASTNode() == ASTNodeType.COMMA) { //the left child of the lambda is the bound variable
-                ASTNode commaNode = node.getChildOfASTNode();
-                ASTNode childNode = commaNode.getChildOfASTNode();
+    private void buildDeltaBody(AbstractSyntaxTreeNode node, Stack<AbstractSyntaxTreeNode> body) {
+        if (node.getTypeOfASTNode() == AbstractSyntaxTreeNodeType.LAMBDA) { //create a new delta
+            DeltaControlStructure d = createDelta(node.getChildOfASTNode().getSiblingOfASTNode()); //the new delta's body starts at the right child of the lambda
+            if (node.getChildOfASTNode().getTypeOfASTNode() == AbstractSyntaxTreeNodeType.COMMA) { //the left child of the lambda is the bound variable
+                AbstractSyntaxTreeNode commaNode = node.getChildOfASTNode();
+                AbstractSyntaxTreeNode childNode = commaNode.getChildOfASTNode();
                 while (childNode != null) {
                     d.addBoundVars(childNode.getValueOfASTNode());
                     childNode = childNode.getSiblingOfASTNode();
@@ -334,15 +334,15 @@ public class AST {
                 d.addBoundVars(node.getChildOfASTNode().getValueOfASTNode());
             body.push(d); //add this new delta to the existing delta's body
             return;
-        } else if (node.getTypeOfASTNode() == ASTNodeType.CONDITIONAL) {
+        } else if (node.getTypeOfASTNode() == AbstractSyntaxTreeNodeType.CONDITIONAL) {
             //to enable programming order evaluation, traverse the children in reverse order so the condition leads
-            // cond -> then else becomes then else Beta cond
-            ASTNode conditionNode = node.getChildOfASTNode();
-            ASTNode thenNode = conditionNode.getSiblingOfASTNode();
-            ASTNode elseNode = thenNode.getSiblingOfASTNode();
+            // cond -> then else becomes then else BetaConditionalEvaluation cond
+            AbstractSyntaxTreeNode conditionNode = node.getChildOfASTNode();
+            AbstractSyntaxTreeNode thenNode = conditionNode.getSiblingOfASTNode();
+            AbstractSyntaxTreeNode elseNode = thenNode.getSiblingOfASTNode();
 
-            //Add a Beta node.
-            Beta betaNode = new Beta();
+            //Add a BetaConditionalEvaluation node.
+            BetaConditionalEvaluation betaNode = new BetaConditionalEvaluation();
 
             buildDeltaBody(thenNode, betaNode.getThenBody());
             buildDeltaBody(elseNode, betaNode.getElseBody());
@@ -356,7 +356,7 @@ public class AST {
 
         //preOrder walk
         body.push(node);
-        ASTNode childNode = node.getChildOfASTNode();
+        AbstractSyntaxTreeNode childNode = node.getChildOfASTNode();
         while (childNode != null) {
             buildDeltaBody(childNode, body);
             childNode = childNode.getSiblingOfASTNode();
@@ -368,8 +368,8 @@ public class AST {
     }
 
     private static class PendingDeltaBody {
-        Stack<ASTNode> body;
-        ASTNode startNode;
+        Stack<AbstractSyntaxTreeNode> body;
+        AbstractSyntaxTreeNode startNode;
     }
 }
 
