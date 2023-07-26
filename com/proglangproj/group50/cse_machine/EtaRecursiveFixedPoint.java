@@ -4,12 +4,20 @@ import com.proglangproj.group50.abstractsyntaxtree.AbstractSyntaxTreeNode;
 import com.proglangproj.group50.abstractsyntaxtree.AbstractSyntaxTreeNodeType;
 
 /**
- * Represents the fixed-point resulting from the application (Y F). We never
- * actually evaluate the fixed-point. The hope is that the program will (in the
- * recursion's base case) choose the option that doesn't have the fixed point (and
- * hence will not lead to our evaluating the fixed point again (what happens when
- * we replace YF with F (YF) i.e., EtaRecursiveFixedPoint with DeltaControlStructure EtaRecursiveFixedPoint)). If the source code creates
- * an infinite recursion, none of these tricks will save us.
+ * EtaRecursiveFixedPoint represents the result of applying the fixed-point operator (Y F) to a function F.
+ * It is important to note that we do not actually evaluate the fixed-point itself. Instead, we rely on the program
+ * to make the right choice in the recursion's base case, avoiding the evaluation of the fixed-point again.
+ *
+ * The purpose of EtaRecursiveFixedPoint is to handle recursive functions efficiently. When a recursive function
+ * is encountered in the source code, applying the fixed-point operator creates an opportunity for the program
+ * to break out of infinite recursion. By allowing the program to choose the option that avoids the fixed-point,
+ * we prevent unnecessary evaluations and potentially infinite loops.
+ *
+ * However, it's essential to note that if the source code contains an infinite recursion, no tricks like fixed-point
+ * operators can prevent the program from encountering infinite evaluation cycles.
+ *
+ * EtaRecursiveFixedPoint is a critical element in managing recursive scenarios, enabling efficient evaluation of
+ * recursive functions while avoiding infinite loops.
  */
 public class EtaRecursiveFixedPoint extends AbstractSyntaxTreeNode {
   private DeltaControlStructure delta;
