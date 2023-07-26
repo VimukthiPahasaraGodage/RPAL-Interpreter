@@ -6,19 +6,22 @@ import com.proglangproj.group50.abstractsyntaxtree.AbstractSyntaxTreeNode;
 import com.proglangproj.group50.abstractsyntaxtree.AbstractSyntaxTreeNodeType;
 
 /**
- * Used to evaluate conditionals.
- * 'cond -> then | else' in source becomes 'BetaConditionalEvaluation cond' on the control stack where
- * BetaConditionalEvaluation.thenBody = standardized version of then
- * BetaConditionalEvaluation.elseBody = standardized version of else
- * 
- * This inversion is key to implementing a program order evaluation
- * (critical for recursion where putting the then and else nodes above the Conditional
- * node on the control stack will cause infinite recursion if the then and else
- * nodes call the recursive function themselves). Putting the cond node before BetaConditionalEvaluation (and, since
- * BetaConditionalEvaluation contains the then and else nodes, effectively before the then and else nodes), allows
- * evaluating the cond first and then (in the base case) choosing the non-recursive option. This
- * allows breaking out of infinite recursion.
- * @author Raj
+ * BetaConditionalEvaluation is a control structure used to handle conditionals in RPAL.
+ * In the source code, a conditional expression 'cond -> then | else' becomes 'BetaConditionalEvaluation cond' on the control stack.
+ * The BetaConditionalEvaluation class contains references to the standardized versions of 'then' and 'else' expressions,
+ * which are to be evaluated based on the result of 'cond'.
+ *
+ * The key feature of BetaConditionalEvaluation is its inversion of program order evaluation. This inversion is essential
+ * for handling recursion and avoiding infinite loops. By putting 'cond' before BetaConditionalEvaluation on the control stack,
+ * the condition is evaluated first. Then, based on the condition's result, the appropriate branch is chosen for evaluation,
+ * either 'then' or 'else'.
+ *
+ * This inversion breaks the recursion cycle in cases where 'then' or 'else' expressions themselves contain recursive calls.
+ * By evaluating the condition first and deferring the evaluation of branches, we ensure that the recursive functions are not
+ * infinitely called within the same evaluation cycle.
+ *
+ * Overall, BetaConditionalEvaluation ensures proper handling of conditionals, allowing for controlled evaluation of branches
+ * and avoiding recursive pitfalls.
  */
 public class BetaConditionalEvaluation extends AbstractSyntaxTreeNode {
   private Stack<AbstractSyntaxTreeNode> thenBody;
