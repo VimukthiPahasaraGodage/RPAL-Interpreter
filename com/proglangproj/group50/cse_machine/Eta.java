@@ -22,7 +22,7 @@ public class Eta extends ASTNode{
   //used if the program evaluation results in a partial application
   @Override
   public String getVal(){
-    return "[eta closure: "+delta.getBoundVars().get(0)+": "+delta.getIndex()+"]";
+    return "[eta closure: "+delta.getBound_var_list().get(0)+": "+delta.getElement()+"]";
   }
   
   public Eta Accept(NodeCopier Node_Copier){

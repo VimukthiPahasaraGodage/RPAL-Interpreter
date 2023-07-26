@@ -16,12 +16,12 @@ public class CSEMachine{
     if(!ast.Is_Standardized())
       throw new RuntimeException("AST has NOT been standardized!"); //should never happen
     rootDelta = ast.Create_Deltas();
-    rootDelta.setLinkedEnv(new Environment()); //primitive environment
+    rootDelta.setLinked_Environment(new Environment()); //primitive environment
     valueStack = new Stack<ASTNode>();
   }
 
   public void evaluateProgram(){
-    processControlStack(rootDelta, rootDelta.getLinkedEnv());
+    processControlStack(rootDelta, rootDelta.getLinked_Environment());
   }
 
   private void processControlStack(Delta currentDelta, Environment currentEnv){
@@ -56,7 +56,7 @@ public class CSEMachine{
           applyGamma(currentDelta, node, currentEnv, currentControlStack);
           break;
         case DELTA:
-          ((Delta)node).setLinkedEnv(currentEnv); //RULE 2
+          ((Delta)node).setLinked_Environment(currentEnv); //RULE 2
           valueStack.push(node);
           break;
         default:
@@ -313,19 +313,19 @@ public class CSEMachine{
       //We construct a new environment here that will contain all the bindings (single or multiple)
       //required by this Delta. This new environment will link back to the environment carried by the Delta.
       Environment newEnv = new Environment();
-      newEnv.setParent(nextDelta.getLinkedEnv());
+      newEnv.setParent(nextDelta.getLinked_Environment());
       
       //RULE 4
-      if(nextDelta.getBoundVars().size()==1){
-        newEnv.addMapping(nextDelta.getBoundVars().get(0), rand);
+      if(nextDelta.getBound_var_list().size()==1){
+        newEnv.addMapping(nextDelta.getBound_var_list().get(0), rand);
       }
       //RULE 11
       else{
         if(rand.getType()!=ASTNodeType.TUPLE)
           EvaluationError.printError(rand.getSource_Line_Num(), "Expected a tuple; was given \""+rand.getVal()+"\"");
         
-        for(int i = 0; i < nextDelta.getBoundVars().size(); i++){
-          newEnv.addMapping(nextDelta.getBoundVars().get(i), getNthTupleChild((Tuple)rand, i+1)); //+ 1 coz tuple indexing starts at 1
+        for(int i = 0; i < nextDelta.getBound_var_list().size(); i++){
+          newEnv.addMapping(nextDelta.getBound_var_list().get(i), getNthTupleChild((Tuple)rand, i+1)); //+ 1 coz tuple indexing starts at 1
         }
       }
       

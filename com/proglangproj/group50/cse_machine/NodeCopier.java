@@ -77,7 +77,7 @@ public class NodeCopier{
       copy.setSibling(delta.getSibling().Accept(this));
     copy.setType(delta.getType());
     copy.setVal(delta.getVal());
-    copy.setIndex(delta.getIndex());
+    copy.setElement(delta.getElement());
     copy.setSource_Line_Num(delta.getSource_Line_Num());
     
     Stack<ASTNode> bodyCopy = new Stack<ASTNode>();
@@ -87,10 +87,10 @@ public class NodeCopier{
     copy.setBody(bodyCopy);
     
     List<String> boundVarsCopy = new ArrayList<String>();
-    boundVarsCopy.addAll(delta.getBoundVars());
-    copy.setBoundVars(boundVarsCopy);
+    boundVarsCopy.addAll(delta.getBound_var_list());
+    copy.setBound_var_list(boundVarsCopy);
     
-    copy.setLinkedEnv(delta.getLinkedEnv());
+    copy.setLinked_Environment(delta.getLinked_Environment());
     
     return copy;
   }

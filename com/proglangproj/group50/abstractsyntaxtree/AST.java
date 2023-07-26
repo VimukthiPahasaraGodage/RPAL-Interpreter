@@ -291,7 +291,7 @@ public class AST{
     
     Delta delta_1 = new Delta();
     delta_1.setBody(Pend_Delta.body);
-    delta_1.setIndex(Delta_Index++);
+    delta_1.setElement(Delta_Index++);
     Cur_Delta = delta_1;
     
     if(Start_Body_Node == root)
