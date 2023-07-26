@@ -4,31 +4,30 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
-import com.proglangproj.group50.abstractsyntaxtree.ASTNode;
-import com.proglangproj.group50.abstractsyntaxtree.ASTNodeType;
+import com.proglangproj.group50.abstractsyntaxtree.AbstractSyntaxTreeNode;
+import com.proglangproj.group50.abstractsyntaxtree.AbstractSyntaxTreeNodeType;
 
 /**
  * Represents a lambda closure.
- * @author Raj
  */
-public class Delta extends ASTNode{
+public class DeltaControlStructure extends AbstractSyntaxTreeNode {
   private List<String> boundVars;
-  private Environment linkedEnv; //environment in effect when this Delta was pushed on to the value stack
-  private Stack<ASTNode> body;
+  private Environment linkedEnv; //environment in effect when this DeltaControlStructure was pushed on to the value stack
+  private Stack<AbstractSyntaxTreeNode> body;
   private int index;
   
-  public Delta(){
-    setType(ASTNodeType.DELTA);
+  public DeltaControlStructure(){
+    setTypeOfASTNode(AbstractSyntaxTreeNodeType.DELTA);
     boundVars = new ArrayList<String>();
   }
   
-  public Delta Accept(NodeCopier Node_Copier){
-    return Node_Copier.copy(this);
+  public DeltaControlStructure acceptASTNode(NodeCopier nodeCopier){
+    return nodeCopier.copy(this);
   }
   
   //used if the program evaluation results in a partial application
   @Override
-  public String getVal(){
+  public String getValueOfASTNode(){
     return "[lambda closure: "+boundVars.get(0)+": "+index+"]";
   }
 
@@ -44,11 +43,11 @@ public class Delta extends ASTNode{
     this.boundVars = boundVars;
   }
   
-  public Stack<ASTNode> getBody(){
+  public Stack<AbstractSyntaxTreeNode> getBody(){
     return body;
   }
   
-  public void setBody(Stack<ASTNode> body){
+  public void setBody(Stack<AbstractSyntaxTreeNode> body){
     this.body = body;
   }
   

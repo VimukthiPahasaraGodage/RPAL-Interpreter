@@ -28,7 +28,7 @@ public class rpal20 {
             System.out.println("Please specify a RPAL source file: java rpal20 input_file > output_file");
             return;
         }
-        AST ast = buildAST(rpalProgFile);
+        AbstractSyntaxTree ast = buildAST(rpalProgFile);
         if (ast != null) {
             ast.Standardize();
             String evaluationResult = evaluateST(ast);
@@ -40,19 +40,19 @@ public class rpal20 {
         }
     }
 
-    private static AST buildAST(String fileName){
-        AST ast = null;
+    private static AbstractSyntaxTree buildAST(String fileName){
+        AbstractSyntaxTree ast = null;
         try{
             Scanner scanner = new Scanner(fileName);
             Parser parser = new Parser(scanner);
             ast = parser.Build_AST();
         }catch(IOException e){
-            throw new ParseException("ERROR: Could not read from file: " + fileName);
+            throw new RuntimeException("ERROR: Could not read from file: " + fileName);
         }
         return ast;
     }
 
-    private static String evaluateST(AST ast){
+    private static String evaluateST(AbstractSyntaxTree ast){
         CSEMachine cseMachine = new CSEMachine(ast);
         cseMachine.evaluateProgram();
         return cseMachine.evaluationResult;

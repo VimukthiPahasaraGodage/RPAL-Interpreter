@@ -1,31 +1,31 @@
 package com.proglangproj.group50.cse_machine;
 
-import com.proglangproj.group50.abstractsyntaxtree.ASTNode;
-import com.proglangproj.group50.abstractsyntaxtree.ASTNodeType;
+import com.proglangproj.group50.abstractsyntaxtree.AbstractSyntaxTreeNode;
+import com.proglangproj.group50.abstractsyntaxtree.AbstractSyntaxTreeNodeType;
 
-public class Tuple extends ASTNode{
+public class Tuple extends AbstractSyntaxTreeNode {
   
   public Tuple(){
-    setType(ASTNodeType.TUPLE);
+    setTypeOfASTNode(AbstractSyntaxTreeNodeType.TUPLE);
   }
   
   @Override
-  public String getVal(){
-    ASTNode childNode = getChild();
+  public String getValueOfASTNode(){
+    AbstractSyntaxTreeNode childNode = getChildOfASTNode();
     if(childNode==null)
       return "nil";
     
     String printValue = "(";
-    while(childNode.getSibling()!=null){
-      printValue += childNode.getVal() + ", ";
-      childNode = childNode.getSibling();
+    while(childNode.getSiblingOfASTNode()!=null){
+      printValue += childNode.getValueOfASTNode() + ", ";
+      childNode = childNode.getSiblingOfASTNode();
     }
-    printValue += childNode.getVal() + ")";
+    printValue += childNode.getValueOfASTNode() + ")";
     return printValue;
   }
   
-  public Tuple Accept(NodeCopier Node_Copier){
-    return Node_Copier.copy(this);
+  public Tuple acceptASTNode(NodeCopier nodeCopier){
+    return nodeCopier.copy(this);
   }
   
 }
