@@ -21,24 +21,7 @@ public class AbstractSyntaxTree {
         this.root = node;
     }
 
-    /**
-     * Prints the tree nodes in pre-order fashion.
-     */
-    public void print() {
-        Print_In_Preorder(root, "");
-    }
-
-    private void Print_In_Preorder(AbstractSyntaxTreeNode node, String Print_Prefix) {
-        if (node == null) {
-            return;
-        }
-
-        Print_ASTNode_Details(node, Print_Prefix);
-        Print_In_Preorder(node.getChildOfASTNode(), Print_Prefix + ".");
-        Print_In_Preorder(node.getSiblingOfASTNode(), Print_Prefix);
-    }
-
-    private void Print_ASTNode_Details(AbstractSyntaxTreeNode node, String Print_Prefix) {
+    private void PrintASTNodeDetails(AbstractSyntaxTreeNode node, String Print_Prefix) {
         if (node.getTypeOfASTNode() == AbstractSyntaxTreeNodeType.IDENTIFIER ||
                 node.getTypeOfASTNode() == AbstractSyntaxTreeNodeType.INTEGER) {
             System.out.printf(Print_Prefix + node.getTypeOfASTNode().getPrintNameOfASTNode() + "\n", node.getValueOfASTNode());
