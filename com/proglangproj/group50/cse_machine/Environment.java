@@ -36,7 +36,7 @@ public class Environment{
     retValue = map.get(key);
     
     if(retValue!=null)
-      return retValue.Accept(new NodeCopier());
+      return retValue.acceptASTNode(new NodeCopier());
     
     if(parent!=null)
       return parent.lookup(key);
