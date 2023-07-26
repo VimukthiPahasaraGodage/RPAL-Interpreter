@@ -18,7 +18,7 @@ CLASSES = \
         com/proglangproj/group50/cse_machine/DeltaControlStructure.java \
         com/proglangproj/group50/cse_machine/Environment.java \
         com/proglangproj/group50/cse_machine/EtaRecursiveFixedPoint.java \
-        com/proglangproj/group50/cse_machine/NodeCopier.java \
+        com/proglangproj/group50/cse_machine/CopierOfNodes.java \
         com/proglangproj/group50/cse_machine/Tuple.java \
         com/proglangproj/group50/lexicalanalyzer/Scanner.java \
         com/proglangproj/group50/lexicalanalyzer/Token.java \

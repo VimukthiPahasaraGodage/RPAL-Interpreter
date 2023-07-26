@@ -1,6 +1,6 @@
 package com.proglangproj.group50.abstractsyntaxtree;
 
-import com.proglangproj.group50.cse_machine.NodeCopier;
+import com.proglangproj.group50.cse_machine.CopierOfNodes;
 
 public class AbstractSyntaxTreeNode {
     private AbstractSyntaxTreeNodeType typeOfASTNode;
@@ -41,7 +41,7 @@ public class AbstractSyntaxTreeNode {
         this.valueOfASTNode = valueOfASTNode;
     }
 
-    public AbstractSyntaxTreeNode acceptASTNode(NodeCopier nodeCopier) {
+    public AbstractSyntaxTreeNode acceptASTNode(CopierOfNodes nodeCopier) {
         return nodeCopier.copy(this);
     }
 

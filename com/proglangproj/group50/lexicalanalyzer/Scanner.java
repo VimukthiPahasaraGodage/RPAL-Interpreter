@@ -50,6 +50,7 @@ public class Scanner {
     private final BufferedReader buffer;
     private String extraCharRead;
     private int currentLineNumberInRPALSource;
+
     public Scanner(String inputFile) throws IOException {
         currentLineNumberInRPALSource = 1;
         buffer = new BufferedReader(new InputStreamReader(new FileInputStream(new File(inputFile))));

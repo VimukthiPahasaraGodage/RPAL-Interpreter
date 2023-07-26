@@ -15,8 +15,8 @@ import java.util.Stack;
  * This builds the AbstractSyntaxTree using the rules in RPAL grammar.
  */
 public class Parser {
-    Stack<AbstractSyntaxTreeNode> Stack;
     private final Scanner scannerOfLexicalAnalyzer;
+    Stack<AbstractSyntaxTreeNode> Stack;
     private Token Cur_Token;
 
     public Parser(Scanner scanner) {
@@ -57,14 +57,14 @@ public class Parser {
         if (Cur_Token == null) {
             return false;
         }
-      return Cur_Token.getTokenType() == type && Cur_Token.getTokenValue().equals(val);
+        return Cur_Token.getTokenType() == type && Cur_Token.getTokenValue().equals(val);
     }
 
     private boolean IsCurrentTokenType(int type) {
         if (Cur_Token == null) {
             return false;
         }
-      return Cur_Token.getTokenType() == type;
+        return Cur_Token.getTokenType() == type;
     }
 
     /**
