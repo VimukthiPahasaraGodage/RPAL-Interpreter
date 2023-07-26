@@ -580,9 +580,9 @@ public class CSEMachine{
       EvaluationError.printError(conditionResultNode.getSource_Line_Num(), "Expecting a truthvalue; found \""+conditionResultNode.getVal()+"\"");
 
     if(conditionResultNode.getType()==ASTNodeType.TRUE)
-      currentControlStack.addAll(node.getThenBody());
+      currentControlStack.addAll(node.getThenNode());
     else
-      currentControlStack.addAll(node.getElseBody());
+      currentControlStack.addAll(node.getElseNode());
   }
 
   private int getNumChildren(ASTNode node){
